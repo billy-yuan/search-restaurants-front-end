@@ -23,7 +23,9 @@ function SearchBar() {
 
     if (response.status === 200) {
       setIsLoading(false);
-      navigate("/results", { state: response.body });
+      navigate("/results", {
+        state: { query: searchQuery, data: response.body },
+      });
     } else {
       setIsLoading(false);
       setIsError(true);

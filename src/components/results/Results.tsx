@@ -9,7 +9,8 @@ function useGetState(): any[] {
       state !== null &&
       state !== undefined &&
       typeof state === "object" &&
-      state.constructor === [].constructor
+      typeof state.query === "string" &&
+      state.data.constructor === [].constructor
     ) {
       return state;
     } else {
@@ -21,16 +22,17 @@ function useGetState(): any[] {
 }
 
 function Results() {
-  const data = useGetState();
+  // const data = useGetState();
+  const { data, query } = useGetState();
 
   if (!data) {
     return <Navigate to="/" />;
   }
   return (
     <div>
-      Results
+      {`Showing results for "${query}"`}
       {data.map((value) => (
-        <RestaurantCard restaurant={value} />
+        <RestaurantCard key={value._id} restaurant={value} />
       ))}
     </div>
   );
