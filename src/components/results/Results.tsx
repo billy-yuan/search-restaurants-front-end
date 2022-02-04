@@ -3,7 +3,6 @@ import RestaurantCard from "../restaurant-card";
 
 function useGetState(): any[] {
   let { state } = useLocation();
-
   try {
     if (
       state !== null &&
@@ -28,9 +27,10 @@ function Results() {
   if (!data) {
     return <Navigate to="/" />;
   }
+
   return (
     <div>
-      {`Showing results for "${query}"`}
+      {`Showing ${data.length} results for "${query}"`}
       {data.map((value) => (
         <RestaurantCard key={value._id} restaurant={value} />
       ))}
