@@ -20,7 +20,6 @@ function useGetState(): any[] {
 
 function Results() {
   const data = useGetState();
-  console.log(data);
   return (
     <div>
       {data.map((value) => (
