@@ -3,13 +3,13 @@ import RestaurantCard from "../restaurant-card";
 
 function useGetState(): any[] {
   let { state } = useLocation();
-
   try {
     if (
       state !== null &&
       state !== undefined &&
       typeof state === "object" &&
-      state.constructor === [].constructor
+      typeof state.query === "string" &&
+      state.data.constructor === [].constructor
     ) {
       return state;
     } else {
@@ -21,16 +21,17 @@ function useGetState(): any[] {
 }
 
 function Results() {
-  const data = useGetState();
+  const { data, query } = useGetState();
 
   if (!data) {
     return <Navigate to="/" />;
   }
+
   return (
     <div>
-      Results
+      {`Showing ${data.length} results for "${query}"`}
       {data.map((value) => (
-        <RestaurantCard restaurant={value} />
+        <RestaurantCard key={value._id} restaurant={value} />
       ))}
     </div>
   );
