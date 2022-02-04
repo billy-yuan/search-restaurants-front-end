@@ -8,7 +8,6 @@ function Categories({ categories }: { categories: string[] }) {
 function RestaurantCard({ restaurant }: any) {
   console.log(restaurant);
 
-  restaurant.categories = ["Peruvian", "Bacon"];
   return (
     <div style={{ margin: "20px" }}>
       <div>Name: {restaurant.name}</div>
