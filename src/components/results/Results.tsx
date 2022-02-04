@@ -21,7 +21,6 @@ function useGetState(): any[] {
 }
 
 function Results() {
-  // const data = useGetState();
   const { data, query } = useGetState();
 
   if (!data) {
