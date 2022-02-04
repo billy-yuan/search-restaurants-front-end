@@ -13,7 +13,7 @@ function useGetState(): any[] {
     ) {
       return state;
     } else {
-      throw Error("Not an array of objects");
+      return null;
     }
   } catch (e) {
     console.log(e);
