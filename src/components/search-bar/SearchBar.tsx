@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../utility/api";
-import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/endpoints";
+import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
 
 function SearchBar() {
   const navigate = useNavigate();
