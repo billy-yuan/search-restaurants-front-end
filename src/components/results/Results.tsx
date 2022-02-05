@@ -31,6 +31,7 @@ function useGetState(): { data: object[]; query: string } | null {
 function Results() {
   const { data, query } = useGetState();
   const [resultsState, setResultsState] = useState({ data, query });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [currentFilter, setCurrentFilter] = useState<CurrentFilter>({
     articles: [],
@@ -89,11 +90,13 @@ function Results() {
       }
     }
 
+    setIsLoading(true);
     // Fetch data
     const refreshData = async (url: string) => {
-      fetchData(url).then((res) =>
-        setResultsState({ ...resultsState, data: res.body })
-      );
+      fetchData(url).then((res) => {
+        setResultsState({ ...resultsState, data: res.body });
+        setIsLoading(false);
+      });
     };
 
     const url = `${BASE_URL}${SEARCH_ENDPOINT}?${encodedParameters.join("&")}`;
@@ -106,6 +109,7 @@ function Results() {
         filterOptions={filterOptions}
         currentFilter={currentFilter}
         setFilter={setCurrentFilter}
+        isLoading={isLoading}
       />
       {`Showing ${resultsState.data.length} results for "${query}"`}
       {resultsState.data.map((value) => (
