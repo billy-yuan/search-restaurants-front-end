@@ -55,13 +55,12 @@ function Results() {
   }
 
   // make options into array
-  const baseOption = { value: "all", display: "All" };
-  const categoriesOptions = [baseOption];
+  const categoriesOptions = [];
   for (let category of Object.keys(categories)) {
     categoriesOptions.push({ value: category, label: category });
   }
 
-  const articlesOptions = [baseOption];
+  const articlesOptions = [];
 
   for (let id of Object.keys(articles)) {
     articlesOptions.push({
