@@ -42,24 +42,26 @@ function Results() {
   }
 
   // make options into array
-  const categoriesOptions = [];
+  const baseOption = { value: "all", display: "All" };
+  const categoriesOptions = [baseOption];
   for (let category of Object.keys(categories)) {
-    categoriesOptions.push({ value: category, display: category });
+    categoriesOptions.push({ value: category, label: category });
   }
 
-  const articlesOptions = [];
+  const articlesOptions = [baseOption];
 
   for (let id of Object.keys(articles)) {
     articlesOptions.push({
       value: id,
-      display: articles[id].title,
+      label: articles[id].title,
     });
   }
 
   // consolidate filter options
+
   const filterOptions = [
-    { dropdownName: "category", options: categoriesOptions },
-    { dropdownName: "articles", options: articlesOptions },
+    { dropdownName: "Category", options: categoriesOptions },
+    { dropdownName: "Articles", options: articlesOptions },
   ];
   return (
     <div>
