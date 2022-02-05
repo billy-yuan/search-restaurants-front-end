@@ -46,7 +46,7 @@ function SearchBar() {
         <button
           type="submit"
           value="Submit"
-          disabled={disableSearch(searchQuery)}
+          disabled={isLoading || disableSearch(searchQuery)}
         >
           Search
         </button>
