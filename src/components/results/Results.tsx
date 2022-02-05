@@ -30,6 +30,7 @@ function useGetState(): { data: object[]; query: string } | null {
 
 function Results() {
   const { data, query } = useGetState();
+  const [resultsState, setResultsState] = useState({ data, query });
 
   const [currentFilter, setCurrentFilter] = useState<CurrentFilter>({
     articles: [],
@@ -75,6 +76,31 @@ function Results() {
     articles: articlesOptions,
   };
 
+  // Make filter request
+  useEffect(() => {
+    // TODO: Refactor. Make URL from parameters
+    let encodedParameters = [`q=${encodeURIComponent(query)}`];
+    for (let name of Object.keys(currentFilter)) {
+      let filter = currentFilter[name];
+      if (filter.length > 0) {
+        const encodedParameter = encodeURIComponent(
+          currentFilter[name].join(",")
+        );
+        encodedParameters.push(`${name}=${encodedParameter}`);
+      }
+    }
+
+    // Fetch data
+    const refreshData = async (url: string) => {
+      fetchData(url).then((res) =>
+        setResultsState({ ...resultsState, data: res.body })
+      );
+    };
+
+    const url = `${BASE_URL}${SEARCH_ENDPOINT}?${encodedParameters.join("&")}`;
+    refreshData(url);
+  }, [currentFilter]);
+
   return (
     <div>
       <Filter
@@ -82,8 +108,8 @@ function Results() {
         currentFilter={currentFilter}
         setFilter={setCurrentFilter}
       />
-      {`Showing ${data.length} results for "${query}"`}
-      {data.map((value) => (
+      {`Showing ${resultsState.data.length} results for "${query}"`}
+      {resultsState.data.map((value) => (
         <RestaurantCard key={value._id} restaurant={value} />
       ))}
     </div>
