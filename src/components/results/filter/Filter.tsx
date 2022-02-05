@@ -58,6 +58,7 @@ function Filter({
       <div>
         {Object.keys(filterOptions).map((option) => (
           <Dropdown
+            key={`dropdown-${option}`}
             dropdownName={option}
             options={filterOptions[option]}
             currentFilter={currentFilter}
