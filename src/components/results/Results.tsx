@@ -30,6 +30,7 @@ function useGetState(): { data: object[]; query: string } | null {
 
 function Results() {
   const { data, query } = useGetState();
+  const [initialLoad, setInitialLoad] = useState<boolean>(true);
   const [resultsState, setResultsState] = useState({ data, query });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -90,7 +91,6 @@ function Results() {
       }
     }
 
-    setIsLoading(true);
     // Fetch data
     const refreshData = async (url: string) => {
       fetchData(url).then((res) => {
@@ -99,8 +99,15 @@ function Results() {
       });
     };
 
-    const url = `${BASE_URL}${SEARCH_ENDPOINT}?${encodedParameters.join("&")}`;
-    refreshData(url);
+    if (!initialLoad) {
+      setIsLoading(true);
+      const url = `${BASE_URL}${SEARCH_ENDPOINT}?${encodedParameters.join(
+        "&"
+      )}`;
+      refreshData(url);
+    } else {
+      setInitialLoad(false);
+    }
   }, [currentFilter]);
 
   return (
