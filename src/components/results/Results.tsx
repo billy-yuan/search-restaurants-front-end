@@ -1,6 +1,13 @@
 import { Navigate, useLocation } from "react-router-dom";
 import Filter from "./filter";
 import RestaurantCard from "../restaurant-card";
+import { useEffect, useState } from "react";
+import { fetchData } from "../../utility/api";
+import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
+
+type CurrentFilter = {
+  [key: string]: string[];
+};
 
 function useGetState(): { data: object[]; query: string } | null {
   let { state } = useLocation();
@@ -23,6 +30,11 @@ function useGetState(): { data: object[]; query: string } | null {
 
 function Results() {
   const { data, query } = useGetState();
+
+  const [currentFilter, setCurrentFilter] = useState<CurrentFilter>({
+    articles: [],
+    categories: [],
+  });
 
   if (!data) {
     return <Navigate to="/" />;
@@ -58,14 +70,18 @@ function Results() {
   }
 
   // consolidate filter options
+  const filterOptions = {
+    categories: categoriesOptions,
+    articles: articlesOptions,
+  };
 
-  const filterOptions = [
-    { dropdownName: "Category", options: categoriesOptions },
-    { dropdownName: "Articles", options: articlesOptions },
-  ];
   return (
     <div>
-      <Filter filterOptions={filterOptions} />
+      <Filter
+        filterOptions={filterOptions}
+        currentFilter={currentFilter}
+        setFilter={setCurrentFilter}
+      />
       {`Showing ${data.length} results for "${query}"`}
       {data.map((value) => (
         <RestaurantCard key={value._id} restaurant={value} />
