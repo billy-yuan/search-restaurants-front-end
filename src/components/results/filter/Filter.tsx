@@ -1,8 +1,8 @@
 import Select from "react-select";
 
-type FilterOption = {
+export type FilterOption = {
   value: string;
-  display: string;
+  label: string;
 };
 
 type DropdownProps = {
