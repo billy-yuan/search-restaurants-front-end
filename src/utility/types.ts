@@ -12,4 +12,5 @@ export type Article = {
   _id: string;
   title: string;
   url: string;
+  published_date: string;
 };
