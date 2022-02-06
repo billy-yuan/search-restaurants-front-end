@@ -6,17 +6,27 @@ import { fetchData } from "../../utility/api";
 import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
 import { createFilters } from "./filter/helpers";
 import UrlBuilder from "../../utility/urlBuilder";
+import { Restaurant } from "../../utility/types";
 
 type CurrentFilter = {
   [key: string]: string[];
 };
 
+type ResultsState = {
+  query: string;
+  data: Restaurant[];
+};
+type LocationState = {
+  state: ResultsState;
+};
+
 /**
  * Passes the data + query term from the search page after the user clicks search.
  */
-function useGetState(): { data: object[]; query: string } | null {
-  let { state } = useLocation();
+function useGetState(): ResultsState {
+  let { state } = useLocation() as LocationState;
 
+  console.log(typeof state);
   try {
     if (
       state !== null &&
@@ -27,17 +37,27 @@ function useGetState(): { data: object[]; query: string } | null {
     ) {
       return state;
     } else {
-      return null;
+      return {
+        data: [],
+        query: "",
+      };
     }
   } catch (e) {
     console.log(e);
+    return {
+      data: [],
+      query: "",
+    };
   }
 }
 
 function Results() {
   const { data, query } = useGetState();
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
-  const [resultsState, setResultsState] = useState({ data, query });
+  const [resultsState, setResultsState] = useState<ResultsState>({
+    data,
+    query,
+  });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [currentFilter, setCurrentFilter] = useState<CurrentFilter>({
     articles: [],
@@ -64,10 +84,15 @@ function Results() {
 
     // Fetch data
     const refreshData = async (url: string) => {
-      fetchData(url).then((res) => {
-        setResultsState({ ...resultsState, data: res.body });
-        setIsLoading(false);
-      });
+      fetchData(url)
+        .then((res) => {
+          const body = res.body as Restaurant[];
+          setResultsState({ ...resultsState, data: body });
+          setIsLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     };
 
     if (!initialLoad) {
