@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { fetchData } from "../../utility/api";
 import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
 import { createFilters } from "./filter/helpers";
+import UrlBuilder from "../../utility/urlBuilder";
 
 type CurrentFilter = {
   [key: string]: string[];
@@ -51,15 +52,13 @@ function Results() {
 
   // Make filter request
   useEffect(() => {
-    // TODO: Refactor. Make URL from parameters
-    let encodedParameters = [`q=${encodeURIComponent(query)}`];
+    const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
+    SearchUrl.addQueryParameter("q", [query]);
+
     for (let name of Object.keys(currentFilter)) {
       let filter = currentFilter[name];
       if (filter.length > 0) {
-        const encodedParameter = encodeURIComponent(
-          currentFilter[name].join(",")
-        );
-        encodedParameters.push(`${name}=${encodedParameter}`);
+        SearchUrl.addQueryParameter(name, currentFilter[name]);
       }
     }
 
@@ -73,9 +72,7 @@ function Results() {
 
     if (!initialLoad) {
       setIsLoading(true);
-      const url = `${BASE_URL}${SEARCH_ENDPOINT}?${encodedParameters.join(
-        "&"
-      )}`;
+      const url = SearchUrl.buildUrl();
       refreshData(url);
     } else {
       setInitialLoad(false);
