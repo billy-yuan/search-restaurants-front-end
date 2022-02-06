@@ -9,7 +9,21 @@ type ResultsState = {
   query: string;
   data: Restaurant[];
 };
-export const StateContext = createContext(null);
+
+type AppState = {
+  dataState: ResultsState;
+  setDataState: React.Dispatch<React.SetStateAction<ResultsState>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const StateContext = createContext<AppState>({
+  dataState: { query: "", data: [] },
+  setDataState: () => null,
+  isLoading: false,
+  setIsLoading: () => null,
+});
+
 function App() {
   const [dataState, setDataState] = useState<ResultsState>({
     query: "",
@@ -17,7 +31,7 @@ function App() {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const defaultState = {
+  const appState: AppState = {
     dataState,
     setDataState,
     isLoading,
@@ -25,7 +39,7 @@ function App() {
   };
 
   return (
-    <StateContext.Provider value={defaultState}>
+    <StateContext.Provider value={appState}>
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />
