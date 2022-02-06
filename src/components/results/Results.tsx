@@ -29,7 +29,6 @@ function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
 function Results() {
   const { dataState, setDataState, isLoading, setIsLoading } =
     useContext(stateContext);
-
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
   const [currentFilter, setCurrentFilter] = useState<CurrentFilter>({
     articles: [],
@@ -57,11 +56,15 @@ function Results() {
     const refreshData = async (url: string) => {
       fetchData(url)
         .then((res) => {
-          const body = res.body as Restaurant[];
+          let body: Restaurant[] = [];
+          if (res.status === 200) {
+            body = res.body ? (res.body as Restaurant[]) : [];
+          }
           setDataState({ ...dataState, data: body });
           setIsLoading(false);
         })
         .catch((e) => {
+          setIsLoading(false);
           console.log(e);
         });
     };

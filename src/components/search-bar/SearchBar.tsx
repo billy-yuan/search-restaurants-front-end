@@ -5,6 +5,7 @@ import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
 import UrlBuilder from "../../utility/urlBuilder";
 import { Oval } from "react-loader-spinner";
 import { stateContext } from "../../utility/context/appState";
+import { Restaurant } from "../../utility/types";
 
 function disableSearch(query: string): boolean {
   const emptyString = query === "";
@@ -23,18 +24,23 @@ function SearchBar() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsError(false);
     setIsLoading(true);
     const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
     SearchUrl.addQueryParameter("q", [searchQuery]);
     const url = SearchUrl.buildUrl();
 
     const response = await fetchData(url);
-
-    if (response.status === 200 && response.body) {
+    if (
+      response.status === 200 &&
+      response.body &&
+      typeof response.body === "object"
+    ) {
       setIsLoading(false);
-      setDataState({ query: searchQuery, data: response.body });
+      setDataState({ query: searchQuery, data: response.body as Restaurant[] });
       navigate(`/results?${SearchUrl.encodeParameters()}`);
     } else {
+      setDataState({ query: searchQuery, data: [] });
       setIsLoading(false);
       setIsError(true);
     }
