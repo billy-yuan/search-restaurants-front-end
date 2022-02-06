@@ -1,6 +1,6 @@
 type Payload = {
   status: number | null;
-  body: null | { [key: string]: any };
+  body: null | string | object[];
 };
 
 async function fetchData(url: string) {
@@ -15,6 +15,7 @@ async function fetchData(url: string) {
       return payload;
     })
     .catch((error) => {
+      payload.status = 500;
       payload.body = error;
       return payload;
     });
