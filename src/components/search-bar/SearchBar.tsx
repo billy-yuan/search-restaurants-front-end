@@ -4,7 +4,7 @@ import { fetchData } from "../../utility/api";
 import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
 import UrlBuilder from "../../utility/urlBuilder";
 import { Oval } from "react-loader-spinner";
-import { StateContext } from "../../App";
+import { stateContext } from "../../utility/context/appState";
 
 function disableSearch(query: string): boolean {
   const emptyString = query === "";
@@ -19,7 +19,7 @@ function SearchBar() {
 
   const [isError, setIsError] = useState<boolean>(false);
 
-  const { setDataState, isLoading, setIsLoading } = useContext(StateContext);
+  const { setDataState, isLoading, setIsLoading } = useContext(stateContext);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,7 +30,7 @@ function SearchBar() {
 
     const response = await fetchData(url);
 
-    if (response.status === 200) {
+    if (response.status === 200 && response.body) {
       setIsLoading(false);
       setDataState({ query: searchQuery, data: response.body });
       navigate(`/results?${SearchUrl.encodeParameters()}`);

@@ -9,7 +9,7 @@ import UrlBuilder from "../../utility/urlBuilder";
 import { Restaurant } from "../../utility/types";
 import SearchBar from "../search-bar";
 import { Grid } from "react-loader-spinner";
-import { StateContext } from "../../App";
+import { stateContext } from "../../utility/context/appState";
 
 type CurrentFilter = {
   [key: string]: string[];
@@ -28,7 +28,7 @@ function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
 
 function Results() {
   const { dataState, setDataState, isLoading, setIsLoading } =
-    useContext(StateContext);
+    useContext(stateContext);
 
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
   const [currentFilter, setCurrentFilter] = useState<CurrentFilter>({
