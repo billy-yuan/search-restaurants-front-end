@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../utility/api";
 import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
+import UrlBuilder from "../../utility/urlBuilder";
 
 function disableSearch(query: string): boolean {
   const emptyString = query === "";
@@ -19,13 +20,14 @@ function SearchBar() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    const queryParameters = `?q=${encodeURIComponent(searchQuery)}`;
-    const url = `${BASE_URL}${SEARCH_ENDPOINT}${queryParameters}`;
+    const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
+    SearchUrl.addQueryParameter("q", [searchQuery]);
+    const url = SearchUrl.buildUrl();
     const response = await fetchData(url);
 
     if (response.status === 200) {
       setIsLoading(false);
-      navigate(`/results${queryParameters}`, {
+      navigate(`/results?${SearchUrl.encodeParameters()}`, {
         state: { query: searchQuery, data: response.body },
       });
     } else {

@@ -11,6 +11,12 @@ class UrlBuilder {
   }
 
   buildUrl() {
+    let encodedParameters = this.encodeParameters();
+
+    return `${this.baseUrl}?${encodedParameters}`;
+  }
+
+  encodeParameters() {
     let encodedParameters = [];
 
     for (let name of Object.keys(this.queryParameters)) {
@@ -20,7 +26,7 @@ class UrlBuilder {
       encodedParameters.push(`${name}=${encodedParameter}`);
     }
 
-    return `${this.baseUrl}?${encodedParameters.join("&")}`;
+    return encodedParameters.join("&");
   }
 }
 
