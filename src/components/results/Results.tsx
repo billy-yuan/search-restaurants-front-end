@@ -26,7 +26,6 @@ type LocationState = {
 function useGetState(): ResultsState {
   let { state } = useLocation() as LocationState;
 
-  console.log(typeof state);
   try {
     if (
       state !== null &&
