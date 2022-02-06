@@ -22,9 +22,9 @@ function StateContext() {
   });
 }
 
-export const stateContext = StateContext();
+const stateContext = StateContext();
 
-export function StateContextProvider({ children }: any) {
+function StateContextProvider({ children }: any) {
   const [dataState, setDataState] = useState<ResultsState>({
     query: "",
     data: [],
@@ -41,3 +41,5 @@ export function StateContextProvider({ children }: any) {
     <stateContext.Provider value={appState}>{children}</stateContext.Provider>
   );
 }
+
+export { stateContext, StateContextProvider };
