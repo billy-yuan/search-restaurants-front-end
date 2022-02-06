@@ -4,6 +4,7 @@ import RestaurantCard from "../restaurant-card";
 import { useEffect, useState } from "react";
 import { fetchData } from "../../utility/api";
 import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
+import { createFilters } from "./filter/helpers";
 
 type CurrentFilter = {
   [key: string]: string[];
@@ -11,6 +12,7 @@ type CurrentFilter = {
 
 function useGetState(): { data: object[]; query: string } | null {
   let { state } = useLocation();
+
   try {
     if (
       state !== null &&
@@ -33,7 +35,6 @@ function Results() {
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
   const [resultsState, setResultsState] = useState({ data, query });
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const [currentFilter, setCurrentFilter] = useState<CurrentFilter>({
     articles: [],
     categories: [],
@@ -43,39 +44,7 @@ function Results() {
     return <Navigate to="/" />;
   }
 
-  const categories = {};
-  const articles = {};
-
-  // get unique categories + articles
-  for (let restaurant of data) {
-    for (let category of restaurant.categories) {
-      categories[category] = category;
-    }
-    for (let article of restaurant.articles) {
-      articles[article._id] = article;
-    }
-  }
-
-  // make options into array
-  const categoriesOptions = [];
-  for (let category of Object.keys(categories)) {
-    categoriesOptions.push({ value: category, label: category });
-  }
-
-  const articlesOptions = [];
-
-  for (let id of Object.keys(articles)) {
-    articlesOptions.push({
-      value: id,
-      label: articles[id].title,
-    });
-  }
-
-  // consolidate filter options
-  const filterOptions = {
-    categories: categoriesOptions,
-    articles: articlesOptions,
-  };
+  const filterOptions = createFilters(data);
 
   // Make filter request
   useEffect(() => {
