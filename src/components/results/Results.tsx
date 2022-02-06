@@ -10,6 +10,9 @@ type CurrentFilter = {
   [key: string]: string[];
 };
 
+/**
+ * Passes the data + query term from the search page after the user clicks search.
+ */
 function useGetState(): { data: object[]; query: string } | null {
   let { state } = useLocation();
 
