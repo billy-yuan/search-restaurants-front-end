@@ -1,6 +1,6 @@
 type Payload = {
   status: number | null;
-  body: null | { [key: string]: any };
+  body: null | object[];
 };
 
 async function fetchData(url: string) {
