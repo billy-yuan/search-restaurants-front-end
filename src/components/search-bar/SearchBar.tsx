@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../utility/api";
 import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
 import UrlBuilder from "../../utility/urlBuilder";
 import { Oval } from "react-loader-spinner";
+import { StateContext } from "../../App";
 
 function disableSearch(query: string): boolean {
   const emptyString = query === "";
@@ -15,8 +16,10 @@ function disableSearch(query: string): boolean {
 function SearchBar() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [isError, setIsError] = useState<boolean>(false);
+
+  const { setDataState, isLoading, setIsLoading } = useContext(StateContext);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,13 +27,13 @@ function SearchBar() {
     const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
     SearchUrl.addQueryParameter("q", [searchQuery]);
     const url = SearchUrl.buildUrl();
+
     const response = await fetchData(url);
 
     if (response.status === 200) {
       setIsLoading(false);
-      navigate(`/results?${SearchUrl.encodeParameters()}`, {
-        state: { query: searchQuery, data: response.body },
-      });
+      setDataState({ query: searchQuery, data: response.body });
+      navigate(`/results?${SearchUrl.encodeParameters()}`);
     } else {
       setIsLoading(false);
       setIsError(true);
