@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../utility/api";
 import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
 import UrlBuilder from "../../utility/urlBuilder";
+import { Oval } from "react-loader-spinner";
 
 function disableSearch(query: string): boolean {
   const emptyString = query === "";
@@ -39,7 +40,6 @@ function SearchBar() {
   return (
     <>
       {isError && <p>There was an error</p>}
-      {isLoading && <p>Loading...</p>}
       <form method="/get" onSubmit={(e) => handleSubmit(e)}>
         <label>
           Search for a restaurant
@@ -50,7 +50,7 @@ function SearchBar() {
           value="Submit"
           disabled={isLoading || disableSearch(searchQuery)}
         >
-          Search
+          {isLoading ? <Oval /> : "Search"}
         </button>
       </form>
     </>

@@ -8,6 +8,7 @@ import { createFilters } from "./filter/helpers";
 import UrlBuilder from "../../utility/urlBuilder";
 import { Restaurant } from "../../utility/types";
 import SearchBar from "../search-bar";
+import { Grid } from "react-loader-spinner";
 
 type CurrentFilter = {
   [key: string]: string[];
@@ -20,6 +21,17 @@ type ResultsState = {
 type LocationState = {
   state: ResultsState;
 };
+
+function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
+  return (
+    <>
+      {`Showing ${data.length} results for "${query}"`}
+      {data.map((value) => (
+        <RestaurantCard key={value._id} restaurant={value} />
+      ))}
+    </>
+  );
+}
 
 /**
  * Passes the data + query term from the search page after the user clicks search.
@@ -106,17 +118,20 @@ function Results() {
 
   return (
     <div>
-      <SearchBar />
+      <SearchBar shouldFetchData={false} />
       <Filter
         filterOptions={filterOptions}
         currentFilter={currentFilter}
         setFilter={setCurrentFilter}
         isLoading={isLoading}
       />
-      {`Showing ${resultsState.data.length} results for "${query}"`}
-      {resultsState.data.map((value) => (
-        <RestaurantCard key={value._id} restaurant={value} />
-      ))}
+      <div>
+        {isLoading ? (
+          <Grid />
+        ) : (
+          <ResultsList data={resultsState.data} query={resultsState.query} />
+        )}
+      </div>
     </div>
   );
 }
