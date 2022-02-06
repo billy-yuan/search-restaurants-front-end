@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Filter from "./filter";
 import RestaurantCard from "../restaurant-card";
 import { useContext, useEffect, useState } from "react";
