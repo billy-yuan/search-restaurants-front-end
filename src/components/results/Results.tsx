@@ -7,6 +7,7 @@ import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
 import { createFilters } from "./filter/helpers";
 import UrlBuilder from "../../utility/urlBuilder";
 import { Restaurant } from "../../utility/types";
+import SearchBar from "../search-bar";
 
 type CurrentFilter = {
   [key: string]: string[];
@@ -101,10 +102,11 @@ function Results() {
     } else {
       setInitialLoad(false);
     }
-  }, [currentFilter]);
+  }, [currentFilter, query]);
 
   return (
     <div>
+      <SearchBar />
       <Filter
         filterOptions={filterOptions}
         currentFilter={currentFilter}
