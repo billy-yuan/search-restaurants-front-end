@@ -1,7 +1,7 @@
-function SearchIcon() {
+function SearchIcon({ color }: { color?: string }) {
   return (
     <svg
-      fill="#000000"
+      fill={color}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 30 30"
       width="30px"
