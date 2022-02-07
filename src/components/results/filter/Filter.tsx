@@ -1,4 +1,5 @@
 import Select from "react-select";
+import "./style.css";
 
 export type FilterOption = {
   value: string;
@@ -28,12 +29,12 @@ function Dropdown({
   isDisabled = false,
 }: DropdownProps) {
   return (
-    <>
-      <span>{dropdownName}</span>
+    <div className="dropdown-container">
       <Select
         name={dropdownName}
         isMulti
         isDisabled={isDisabled}
+        placeholder={dropdownName}
         options={options}
         onChange={(e) => {
           setFilter({
@@ -42,7 +43,7 @@ function Dropdown({
           });
         }}
       />
-    </>
+    </div>
   );
 }
 
@@ -53,9 +54,8 @@ function Filter({
   isLoading,
 }: FilterProps) {
   return (
-    <div style={{ margin: "50px" }}>
-      <div>Filter</div>
-      <div>
+    <div className="filter-container">
+      <div className="dropdowns-container">
         {Object.keys(filterOptions).map((option) => (
           <Dropdown
             key={`dropdown-${option}`}

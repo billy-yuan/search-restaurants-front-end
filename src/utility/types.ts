@@ -1,7 +1,7 @@
 export type Restaurant = {
   _id: string;
   name: string;
-  address: string[];
+  address: string;
   articles: Article[];
   categories: string[];
   price: "$" | "$$" | "$$$" | "$$$$" | null;
