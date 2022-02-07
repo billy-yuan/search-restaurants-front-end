@@ -6,14 +6,13 @@ import UrlBuilder from "../../utility/urlBuilder";
 import { Oval } from "react-loader-spinner";
 import { stateContext } from "../../utility/context/appState";
 import { Restaurant } from "../../utility/types";
+import { SearchIcon } from "../icons";
+import "./style.css";
+import { COLOR } from "../../styles/colors";
 
-function disableSearch(query: string): boolean {
-  const emptyString = query === "";
-  const stringTooLong = query.length > 40;
-
-  return emptyString || stringTooLong;
-}
-
+const loadingStyle = {
+  backgroundColor: COLOR.DARK_TEAL,
+};
 function SearchBar() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -22,6 +21,13 @@ function SearchBar() {
 
   const { setDataState, isLoading, setIsLoading } = useContext(stateContext);
 
+  const disableSearch = (query: string): boolean => {
+    const emptyString = query === "";
+    const stringTooLong = query.length > 40;
+
+    return emptyString || stringTooLong || isLoading;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsError(false);
@@ -29,7 +35,6 @@ function SearchBar() {
     const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
     SearchUrl.addQueryParameter("q", [searchQuery]);
     const url = SearchUrl.buildUrl();
-
     const response = await fetchData(url);
     if (
       response.status === 200 &&
@@ -49,18 +54,35 @@ function SearchBar() {
   return (
     <>
       {isError && <p>There was an error</p>}
-      <form method="/get" onSubmit={(e) => handleSubmit(e)}>
-        <label>
-          Search for a restaurant
-          <input type="text" onChange={(e) => setSearchQuery(e.target.value)} />
-        </label>
-        <button
-          type="submit"
-          value="Submit"
-          disabled={isLoading || disableSearch(searchQuery)}
-        >
-          {isLoading ? <Oval /> : "Search"}
-        </button>
+      <form
+        className="search-form"
+        method="/get"
+        onSubmit={(e) => handleSubmit(e)}
+      >
+        <div className="search-container">
+          <input
+            className="search-bar"
+            type="text"
+            onChange={(e) => setSearchQuery(e.target.value)}
+            disabled={isLoading}
+          />
+
+          <button
+            className="search-button"
+            type="submit"
+            value="Submit"
+            disabled={disableSearch(searchQuery)}
+            style={isLoading ? loadingStyle : {}}
+          >
+            <div className="search-icon">
+              {isLoading ? (
+                <Oval width={"100%"} height={"100%"} color="white" />
+              ) : (
+                <SearchIcon color={"white"} />
+              )}
+            </div>
+          </button>
+        </div>
       </form>
     </>
   );

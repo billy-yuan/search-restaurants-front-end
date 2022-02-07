@@ -1,0 +1,7 @@
+.home-search-container {
+  width: 300px;
+  position: absolute;
+  margin: -25px 0 0 -25px;
+  top: 50%;
+  left: calc(50vw - 150px);
+}

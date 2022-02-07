@@ -1,0 +1,37 @@
+@import "../../styles/vars.css";
+
+.search-button {
+  background-color: var(--color-teal);
+  border-radius: 5px;
+  border: none;
+  height: 40px;
+  width: 40px;
+}
+
+.search-button:hover {
+  background-color: var(--color-teal-dark);
+}
+
+.search-button:hover {
+  cursor: pointer;
+}
+
+.search-form {
+  border-radius: 5px;
+  display: flex;
+  vertical-align: middle;
+}
+
+.search-container {
+  display: flex;
+  width: 300px;
+  height: 40px;
+  box-shadow: 0 2px 18px #00000026;
+}
+
+.search-bar {
+  width: 260px;
+  border-width: 0px;
+  border: none;
+  padding: 10px;
+}

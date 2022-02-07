@@ -1,8 +1,8 @@
 import SearchBar from "../search-bar";
-
+import "./style.css";
 function Home() {
   return (
-    <div>
+    <div className="home-search-container">
       <SearchBar />
     </div>
   );
