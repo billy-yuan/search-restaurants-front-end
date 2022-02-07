@@ -1,4 +1,5 @@
-import { Article } from "../../utility/types";
+import { Article, Restaurant } from "../../utility/types";
+import "./style.css";
 
 function formatDate(dateString: string): string | null {
   if (!dateString) {
@@ -24,10 +25,10 @@ function ArticleSection({ articles }: { articles: Article[] }) {
         const publishedDate = formatDate(article.published_date);
 
         return (
-          <div key={article._id}>
+          <div className="article-link" key={article._id}>
             <a target="_blank" rel="noopener noreferrer" href={article.url}>
               {article.title}
-            </a>
+            </a>{" "}
             <span>{publishedDate}</span>
           </div>
         );
@@ -36,16 +37,19 @@ function ArticleSection({ articles }: { articles: Article[] }) {
   );
 }
 
-function RestaurantCard({ restaurant }: any) {
+function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
+  console.log(restaurant.address);
   return (
-    <div style={{ margin: "20px" }}>
-      <div>Name: {restaurant.name}</div>
-      <div>Address: {restaurant.address}</div>
-      <div>
-        <Categories categories={restaurant.categories} />
-      </div>
+    <div className="restaurant-card-container">
+      <div className="restaurant-card-title">{restaurant.name}</div>
+      <br />
+      <div className="restautant-card-address">{restaurant.address}</div>
+      <Categories categories={restaurant.categories} />
       <div>{restaurant.price}</div>
-      <div>
+      <br />
+      <div className="article-section-container">
+        <div className="article-section-title">Featured Articles </div>
+
         <ArticleSection articles={restaurant.articles} />
       </div>
     </div>
