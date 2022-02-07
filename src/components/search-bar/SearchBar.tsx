@@ -35,7 +35,6 @@ function SearchBar() {
     const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
     SearchUrl.addQueryParameter("q", [searchQuery]);
     const url = SearchUrl.buildUrl();
-    setIsLoading(true);
     const response = await fetchData(url);
     if (
       response.status === 200 &&
