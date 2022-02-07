@@ -79,7 +79,7 @@ function Results() {
   }, [currentFilter]);
 
   return (
-    <div>
+    <div className="results-container">
       <div className="results-header">
         <div className="results-header-search">
           <SearchBar />
@@ -91,7 +91,7 @@ function Results() {
           isLoading={isLoading}
         />
       </div>
-      <div>
+      <div className="sidebar-container">
         {isLoading ? (
           <Grid />
         ) : (
