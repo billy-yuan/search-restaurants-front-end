@@ -6,13 +6,8 @@ import UrlBuilder from "../../utility/urlBuilder";
 import { Oval } from "react-loader-spinner";
 import { stateContext } from "../../utility/context/appState";
 import { Restaurant } from "../../utility/types";
-
-function disableSearch(query: string): boolean {
-  const emptyString = query === "";
-  const stringTooLong = query.length > 40;
-
-  return emptyString || stringTooLong;
-}
+import { SearchIcon } from "../icons";
+import "./style.css";
 
 function SearchBar() {
   const navigate = useNavigate();
@@ -21,6 +16,13 @@ function SearchBar() {
   const [isError, setIsError] = useState<boolean>(false);
 
   const { setDataState, isLoading, setIsLoading } = useContext(stateContext);
+
+  const disableSearch = (query: string): boolean => {
+    const emptyString = query === "";
+    const stringTooLong = query.length > 40;
+
+    return emptyString || stringTooLong || isLoading;
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,18 +51,27 @@ function SearchBar() {
   return (
     <>
       {isError && <p>There was an error</p>}
-      <form method="/get" onSubmit={(e) => handleSubmit(e)}>
-        <label>
-          Search for a restaurant
-          <input type="text" onChange={(e) => setSearchQuery(e.target.value)} />
-        </label>
-        <button
-          type="submit"
-          value="Submit"
-          disabled={isLoading || disableSearch(searchQuery)}
-        >
-          {isLoading ? <Oval /> : "Search"}
-        </button>
+      <form
+        className="search-form"
+        method="/get"
+        onSubmit={(e) => handleSubmit(e)}
+      >
+        <div className="search-container">
+          <input
+            className="search-bar"
+            type="text"
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+
+          <button
+            className="search-button"
+            type="submit"
+            value="Submit"
+            disabled={disableSearch(searchQuery)}
+          >
+            {isLoading ? <Oval /> : <SearchIcon />}
+          </button>
+        </div>
       </form>
     </>
   );
