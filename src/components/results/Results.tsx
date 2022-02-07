@@ -10,6 +10,7 @@ import { Restaurant } from "../../utility/types";
 import SearchBar from "../search-bar";
 import { Grid } from "react-loader-spinner";
 import { stateContext } from "../../utility/context/appState";
+import "./style.css";
 
 type CurrentFilter = {
   [key: string]: string[];
@@ -79,13 +80,17 @@ function Results() {
 
   return (
     <div>
-      <SearchBar />
-      <Filter
-        filterOptions={filterOptions}
-        currentFilter={currentFilter}
-        setFilter={setCurrentFilter}
-        isLoading={isLoading}
-      />
+      <div className="results-header">
+        <div className="results-header-search">
+          <SearchBar />
+        </div>
+        <Filter
+          filterOptions={filterOptions}
+          currentFilter={currentFilter}
+          setFilter={setCurrentFilter}
+          isLoading={isLoading}
+        />
+      </div>
       <div>
         {isLoading ? (
           <Grid />

@@ -1,0 +1,23 @@
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+  margin: 0 auto;
+}
+
+.dropdowns-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.dropdown-container {
+  width: 250px;
+}
+
+.dropdown-name {
+  font-weight: bold;
+  text-transform: capitalize;
+}
