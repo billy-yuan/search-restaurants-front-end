@@ -8,7 +8,11 @@ import { stateContext } from "../../utility/context/appState";
 import { Restaurant } from "../../utility/types";
 import { SearchIcon } from "../icons";
 import "./style.css";
+import { COLOR } from "../../styles/colors";
 
+const loadingStyle = {
+  backgroundColor: COLOR.DARK_TEAL,
+};
 function SearchBar() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -31,7 +35,7 @@ function SearchBar() {
     const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
     SearchUrl.addQueryParameter("q", [searchQuery]);
     const url = SearchUrl.buildUrl();
-
+    setIsLoading(true);
     const response = await fetchData(url);
     if (
       response.status === 200 &&
@@ -61,6 +65,7 @@ function SearchBar() {
             className="search-bar"
             type="text"
             onChange={(e) => setSearchQuery(e.target.value)}
+            disabled={isLoading}
           />
 
           <button
@@ -68,8 +73,15 @@ function SearchBar() {
             type="submit"
             value="Submit"
             disabled={disableSearch(searchQuery)}
+            style={isLoading ? loadingStyle : {}}
           >
-            {isLoading ? <Oval /> : <SearchIcon />}
+            <div className="search-icon">
+              {isLoading ? (
+                <Oval width={"100%"} height={"100%"} color="white" />
+              ) : (
+                <SearchIcon color={"white"} />
+              )}
+            </div>
           </button>
         </div>
       </form>

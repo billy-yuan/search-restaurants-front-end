@@ -1,4 +1,4 @@
-@import "../../vars.css";
+@import "../../styles/vars.css";
 
 .search-button {
   background-color: var(--color-teal);
@@ -6,6 +6,11 @@
   border: none;
   height: 40px;
   width: 40px;
+  opacity: 1;
+}
+
+.search-button:hover {
+  background-color: var(--color-teal-dark);
 }
 
 .search-button:hover {
@@ -29,4 +34,5 @@
   width: 260px;
   border-width: 0px;
   border: none;
+  padding: 10px;
 }
