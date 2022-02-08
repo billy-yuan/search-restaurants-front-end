@@ -16,3 +16,14 @@
   margin: 20px;
   width: 500px;
 }
+
+.results-content-container {
+  display: flex;
+}
+
+.map-container {
+  height: 100vh;
+  width: 45vw;
+  position: fixed;
+  right: 0;
+}

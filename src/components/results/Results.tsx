@@ -11,6 +11,7 @@ import SearchBar from "../search-bar";
 import { Grid } from "react-loader-spinner";
 import { stateContext } from "../../utility/context/appState";
 import "./style.css";
+import ResultsMap from "../map/ResultsMap";
 
 type CurrentFilter = {
   [key: string]: string[];
@@ -78,7 +79,7 @@ function Results() {
       setInitialLoad(false);
     }
   }, [currentFilter]);
-
+  console.log(dataState.data);
   return (
     <div className="results-container">
       <div className="results-header">
@@ -92,12 +93,17 @@ function Results() {
           isLoading={isLoading}
         />
       </div>
-      <div className="sidebar-container">
-        {isLoading ? (
-          <Grid />
-        ) : (
-          <ResultsList data={dataState.data} query={dataState.query} />
-        )}
+      <div className="results-content-container">
+        <div className="sidebar-container">
+          {isLoading ? (
+            <Grid />
+          ) : (
+            <ResultsList data={dataState.data} query={dataState.query} />
+          )}
+        </div>
+        <div className="map-container">
+          <ResultsMap data={dataState.data} />
+        </div>
       </div>
     </div>
   );
