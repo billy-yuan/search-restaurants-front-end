@@ -34,6 +34,7 @@ function Results() {
   const [currentFilter, setCurrentFilter] = useState<CurrentFilter>({
     articles: [],
     categories: [],
+    price: [],
   });
 
   if (!dataState.data) {

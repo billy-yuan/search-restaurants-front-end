@@ -1,10 +1,17 @@
+export enum Price {
+  "$" = "$",
+  "$$" = "$$",
+  "$$$" = "$$$",
+  "$$$$" = "$$$$",
+}
+
 export type Restaurant = {
   _id: string;
   name: string;
   address: string;
   articles: Article[];
   categories: string[];
-  price: "$" | "$$" | "$$$" | "$$$$" | null;
+  price: Price | null;
   coordinates: { latitude: number; longitude: number };
 };
 
