@@ -56,8 +56,11 @@ function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
       <div className="restaurant-card-title">{restaurant.name}</div>
       <br />
       <div className="restautant-card-address">{restaurant.address}</div>
-      <Categories categories={restaurant.categories} />
-      <div>{restaurant.price}</div>
+      <div className="restaurant-card-details">
+        <Categories categories={restaurant.categories} />
+        <div>{restaurant.price}</div>
+      </div>
+
       <br />
       <div className="article-section-container">
         <div className="article-section-title">Featured Articles </div>
