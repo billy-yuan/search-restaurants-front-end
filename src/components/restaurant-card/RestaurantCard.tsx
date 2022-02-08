@@ -1,5 +1,14 @@
 import { Article, Restaurant } from "../../utility/types";
+import { LinkButton } from "../icons";
+
 import "./style.css";
+
+function makeGoogleMapsUrl(query: string) {
+  const GOOGLE_MAPS_SEARCH_URL = "https://www.google.com/maps/search";
+  const parameters = `${query}`.split(" ").join("+");
+
+  return `${GOOGLE_MAPS_SEARCH_URL}/${parameters}`;
+}
 
 function formatDate(dateString: string): string | null {
   if (!dateString) {
@@ -8,6 +17,7 @@ function formatDate(dateString: string): string | null {
   const date = new Date(dateString);
   return `${date.getFullYear()}/${1 + date.getMonth()}/${date.getDate()}`;
 }
+
 function Categories({ categories }: { categories: string[] }) {
   if (categories === []) {
     return <></>;
@@ -29,7 +39,6 @@ function ArticleSection({ articles }: { articles: Article[] }) {
             <a target="_blank" rel="noopener noreferrer" href={article.url}>
               {article.title}
             </a>{" "}
-            <span>{publishedDate}</span>
           </div>
         );
       })}
@@ -38,6 +47,10 @@ function ArticleSection({ articles }: { articles: Article[] }) {
 }
 
 function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
+  const googleMapsUrl = makeGoogleMapsUrl(
+    `${restaurant.name} ${restaurant.address}`
+  );
+
   return (
     <div className="restaurant-card-container">
       <div className="restaurant-card-title">{restaurant.name}</div>
@@ -51,6 +64,9 @@ function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
 
         <ArticleSection articles={restaurant.articles} />
       </div>
+      <br />
+
+      <LinkButton url={googleMapsUrl} displayText="Google Maps" />
     </div>
   );
 }
