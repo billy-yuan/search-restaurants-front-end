@@ -38,7 +38,6 @@ function ArticleSection({ articles }: { articles: Article[] }) {
 }
 
 function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
-  console.log(restaurant.address);
   return (
     <div className="restaurant-card-container">
       <div className="restaurant-card-title">{restaurant.name}</div>
