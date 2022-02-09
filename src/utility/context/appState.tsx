@@ -13,6 +13,8 @@ export type AppState = {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   map: google.maps.Map | null;
   setMap: React.Dispatch<React.SetStateAction<google.maps.Map | null>>;
+  shouldFetchData: boolean;
+  setShouldFetchData: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 function StateContext() {
@@ -23,6 +25,8 @@ function StateContext() {
     setIsLoading: () => null,
     map: null,
     setMap: () => null,
+    shouldFetchData: false,
+    setShouldFetchData: () => null,
   });
 }
 
@@ -35,6 +39,7 @@ function StateContextProvider({ children }: any) {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [shouldFetchData, setShouldFetchData] = useState<boolean>(false);
 
   const appState: AppState = {
     dataState,
@@ -43,6 +48,8 @@ function StateContextProvider({ children }: any) {
     setIsLoading,
     map,
     setMap,
+    shouldFetchData,
+    setShouldFetchData,
   };
 
   return (
