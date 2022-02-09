@@ -2,7 +2,8 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useContext, useState } from "react";
 import { stateContext } from "../../utility/context/appState";
 import { Restaurant } from "../../utility/types";
-import { LatLong } from "./types";
+import { LatLong, ZoomType } from "./types";
+import { ZoomButtons } from "./ZoomButtons";
 
 type ResultsMapsProps = {
   data: Restaurant[];
@@ -19,6 +20,22 @@ function ResultsMap({ data }: ResultsMapsProps) {
   const { map, setMap } = useContext(stateContext);
   const [mapCenter, setmapCenter] = useState<LatLong>(defaultCenter);
 
+  const handleZoomClick = (zoomType: ZoomType) => {
+    const zoomLevel = map?.getZoom();
+    if (!map || zoomLevel === undefined) {
+      return;
+    }
+    switch (zoomType) {
+      case ZoomType.ZOOM_IN:
+        map.setZoom(zoomLevel + 1);
+        break;
+      case ZoomType.ZOOM_OUT:
+        map.setZoom(zoomLevel - 1);
+        break;
+      default:
+        return;
+    }
+  };
   return (
     <>
       <LoadScript googleMapsApiKey={apiKey}>
@@ -28,6 +45,10 @@ function ResultsMap({ data }: ResultsMapsProps) {
           center={mapCenter}
           mapContainerStyle={mapContainerStyle}
         >
+          <ZoomButtons
+            zoomInCallback={() => handleZoomClick(ZoomType.ZOOM_IN)}
+            zoomOutCallback={() => handleZoomClick(ZoomType.ZOOM_OUT)}
+          />
           {data.map(
             (entry) =>
               entry.coordinates && (

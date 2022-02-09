@@ -1,0 +1,47 @@
+@import "../../../styles/vars.css";
+
+.zoom-container {
+  position: absolute;
+  width: 50px;
+  height: 100px;
+  font-size: 30px;
+  cursor: pointer;
+
+  color: white;
+  text-align: center;
+}
+
+.zoom-in {
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+  flex-direction: column;
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 30px 30px 0 0;
+  color: black;
+}
+
+.zoom-out {
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+  flex-direction: column;
+  background-color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 0 0 30px 30px;
+  color: black;
+}
+
+.zoom-in:hover {
+  transition: 0.4s;
+  background-color: var(--color-teal);
+}
+
+.zoom-out:hover {
+  transition: 0.4s;
+  background-color: var(--color-teal);
+  color: black;
+}
