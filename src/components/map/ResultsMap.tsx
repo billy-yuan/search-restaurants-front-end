@@ -2,6 +2,7 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useContext, useState } from "react";
 import { stateContext } from "../../utility/context/appState";
 import { Restaurant } from "../../utility/types";
+import { selectedMarker } from "../icons";
 import { SearchAreaButton } from "./SearchAreaButton";
 import { LatLong, ZoomType } from "./types";
 import { ZoomButtons } from "./ZoomButtons";
@@ -71,6 +72,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
             (entry) =>
               entry.coordinates && (
                 <Marker
+                  icon={selectedMarker}
                   position={{
                     lat: entry.coordinates.latitude,
                     lng: entry.coordinates.longitude,
