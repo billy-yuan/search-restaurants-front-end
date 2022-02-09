@@ -12,6 +12,7 @@ import { Grid } from "react-loader-spinner";
 import { stateContext } from "../../utility/context/appState";
 import "./style.css";
 import ResultsMap from "../map/ResultsMap";
+import { useMapBoundsToString } from "./utility";
 
 type CurrentFilter = {
   [key: string]: string[];
@@ -37,6 +38,7 @@ function Results() {
     categories: [],
     price: [],
   });
+  const mapBounds = useMapBoundsToString();
 
   if (!dataState.data) {
     return <Navigate to="/" />;
@@ -49,6 +51,14 @@ function Results() {
     // Create URL
     const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
     SearchUrl.addQueryParameter("q", [dataState.query]);
+
+    if (mapBounds) {
+      SearchUrl.addQueryParameter("ne_bound", [mapBounds.ne]).addQueryParameter(
+        "sw_bound",
+        [mapBounds.sw]
+      );
+    }
+
     for (let name of Object.keys(currentFilter)) {
       let filter = currentFilter[name];
       if (filter.length > 0) {
@@ -79,7 +89,7 @@ function Results() {
       setInitialLoad(false);
     }
   }, [currentFilter]);
-  console.log(dataState.data);
+
   return (
     <div className="results-container">
       <div className="results-header">
