@@ -24,7 +24,6 @@ const defaultCenter: LatLong = { lat: 40.6779924, lng: -73.9960648 };
 
 function ResultsMap({ data }: ResultsMapsProps) {
   const { setShouldFetchData, map, setMap } = useContext(stateContext);
-  const [mapCenter, setmapCenter] = useState<LatLong>(defaultCenter);
   const [showRedoSearch, setShowRedoSearch] = useState<boolean>(false);
 
   const handleZoomClick = (zoomType: ZoomType) => {
@@ -51,7 +50,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
         <GoogleMap
           onLoad={(m) => setMap(m)}
           zoom={12}
-          center={mapCenter}
+          center={defaultCenter}
           mapContainerStyle={mapContainerStyle}
           onDrag={() => setShowRedoSearch(true)}
           options={googleMapsOptions}
