@@ -1,5 +1,6 @@
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { stateContext } from "../../utility/context/appState";
 import { Restaurant } from "../../utility/types";
 import { LatLong } from "./types";
 
@@ -15,7 +16,7 @@ export const mapContainerStyle = {
 const defaultCenter: LatLong = { lat: 40.6779924, lng: -73.9960648 };
 
 function ResultsMap({ data }: ResultsMapsProps) {
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const { map, setMap } = useContext(stateContext);
   const [mapCenter, setmapCenter] = useState<LatLong>(defaultCenter);
 
   return (
@@ -27,14 +28,17 @@ function ResultsMap({ data }: ResultsMapsProps) {
           center={mapCenter}
           mapContainerStyle={mapContainerStyle}
         >
-          {data.map((entry) => (
-            <Marker
-              position={{
-                lat: entry.coordinates.latitude,
-                lng: entry.coordinates.longitude,
-              }}
-            />
-          ))}
+          {data.map(
+            (entry) =>
+              entry.coordinates && (
+                <Marker
+                  position={{
+                    lat: entry.coordinates.latitude,
+                    lng: entry.coordinates.longitude,
+                  }}
+                />
+              )
+          )}
         </GoogleMap>
       </LoadScript>
     </>
