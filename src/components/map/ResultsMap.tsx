@@ -2,6 +2,7 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useContext, useState } from "react";
 import { stateContext } from "../../utility/context/appState";
 import { Restaurant } from "../../utility/types";
+import { SearchAreaButton } from "./SearchAreaButton";
 import { LatLong, ZoomType } from "./types";
 import { ZoomButtons } from "./ZoomButtons";
 
@@ -49,6 +50,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
             zoomInCallback={() => handleZoomClick(ZoomType.ZOOM_IN)}
             zoomOutCallback={() => handleZoomClick(ZoomType.ZOOM_OUT)}
           />
+          <SearchAreaButton callback={() => null} />
           {data.map(
             (entry) =>
               entry.coordinates && (

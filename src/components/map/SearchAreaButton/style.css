@@ -1,0 +1,22 @@
+@import "../../../styles/vars.css";
+
+.search-area-button-container {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  top: 30px;
+}
+
+.search-area-button {
+  background-color: var(--color-teal);
+  padding: 10px;
+  width: 200px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.search-area-button:hover {
+  cursor: pointer;
+  box-shadow: 0 2px 18px #00000026;
+}
