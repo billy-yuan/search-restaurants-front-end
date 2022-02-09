@@ -10,6 +10,10 @@ type ResultsMapsProps = {
   data: Restaurant[];
 };
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const googleMapsOptions: google.maps.MapOptions = {
+  disableDefaultUI: true,
+};
+
 export const mapContainerStyle = {
   width: "100%",
   height: "100%",
@@ -49,6 +53,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
           center={mapCenter}
           mapContainerStyle={mapContainerStyle}
           onDrag={() => setShowRedoSearch(true)}
+          options={googleMapsOptions}
         >
           <ZoomButtons
             zoomInCallback={() => handleZoomClick(ZoomType.ZOOM_IN)}
