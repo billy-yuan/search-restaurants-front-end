@@ -20,12 +20,15 @@ const defaultCenter: LatLong = { lat: 40.6779924, lng: -73.9960648 };
 function ResultsMap({ data }: ResultsMapsProps) {
   const { map, setMap } = useContext(stateContext);
   const [mapCenter, setmapCenter] = useState<LatLong>(defaultCenter);
+  const [showRedoSearch, setShowRedoSearch] = useState<boolean>(false);
 
   const handleZoomClick = (zoomType: ZoomType) => {
     const zoomLevel = map?.getZoom();
     if (!map || zoomLevel === undefined) {
       return;
     }
+    setShowRedoSearch(true);
+
     switch (zoomType) {
       case ZoomType.ZOOM_IN:
         map.setZoom(zoomLevel + 1);
@@ -45,12 +48,15 @@ function ResultsMap({ data }: ResultsMapsProps) {
           zoom={12}
           center={mapCenter}
           mapContainerStyle={mapContainerStyle}
+          onDrag={() => setShowRedoSearch(true)}
         >
           <ZoomButtons
             zoomInCallback={() => handleZoomClick(ZoomType.ZOOM_IN)}
             zoomOutCallback={() => handleZoomClick(ZoomType.ZOOM_OUT)}
           />
-          <SearchAreaButton callback={() => null} />
+          <div onClick={() => setShowRedoSearch(false)}>
+            {showRedoSearch && <SearchAreaButton callback={() => null} />}
+          </div>
           {data.map(
             (entry) =>
               entry.coordinates && (
