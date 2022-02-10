@@ -3,8 +3,11 @@ import "./App.css";
 import Home from "./components/home";
 import Results from "./components/results/Results";
 import { StateContextProvider } from "./utility/context/appState";
+import { useOnPageChange } from "./utility/hooks";
 
 function App() {
+  useOnPageChange();
+
   return (
     <StateContextProvider>
       <div className="App">
