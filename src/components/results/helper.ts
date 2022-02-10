@@ -23,7 +23,7 @@ export function buildeFetchDataUrl(
   for (let name of Object.keys(filters)) {
     let filter = filters[name];
     if (filter.length > 0) {
-      SearchUrl.addQueryParameter(name, filters[name]);
+      SearchUrl.addQueryParameter(name, filter);
     }
   }
 
