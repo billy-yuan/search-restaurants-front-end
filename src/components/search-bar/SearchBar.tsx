@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../utility/api";
 import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
@@ -11,17 +11,32 @@ import "./style.css";
 import { COLOR } from "../../styles/colors";
 import { buildFetchDataUrl } from "../results/helper";
 import { useMapBoundsToString } from "../results/utility";
+import { defaultCenter, defaultZoom, setMapArea } from "../map/utility";
+import { MAP_PROPERTIES } from "../map/types";
 
 const loadingStyle = {
   backgroundColor: COLOR.DARK_TEAL,
 };
+
+// Requirement is to reset map to default view when user clicks search.
+function handleMapAfterSearch(map: google.maps.Map | null) {
+  setMapArea(map, {
+    [MAP_PROPERTIES.CENTER]: defaultCenter,
+    [MAP_PROPERTIES.ZOOM]: defaultZoom,
+  });
+}
+
 function SearchBar() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
-
+  let mapBounds: {
+    ne: string;
+    sw: string;
+  } | null = null;
   const [isError, setIsError] = useState<boolean>(false);
 
-  const { setDataState, isLoading, setIsLoading } = useContext(stateContext);
+  const { map, setMap, setDataState, isLoading, setIsLoading } =
+    useContext(stateContext);
 
   const disableSearch = (query: string): boolean => {
     const emptyString = query === "";
@@ -30,7 +45,13 @@ function SearchBar() {
     return emptyString || stringTooLong || isLoading;
   };
 
-  const mapBounds = useMapBoundsToString();
+  // Update map bounds whenever map is updated.
+  // When the user changes pages, the map is reset.
+  // This hook ensures that the previous search's map area is not used.
+  useEffect(() => {
+    mapBounds = useMapBoundsToString(null);
+  }, [map]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsError(false);
@@ -40,8 +61,13 @@ function SearchBar() {
     // https://github.com/billy-yuan/search-restaurants-front-end/issues/18
     const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
     SearchUrl.addQueryParameter("q", [searchQuery]);
+
     const url = buildFetchDataUrl(searchQuery, {}, mapBounds);
-    const response = await fetchData(url);
+    const response = await fetchData(url).then((res) => {
+      // Requirement is that the map area ia reset if the user uses the search bar.
+      handleMapAfterSearch(map);
+      return res;
+    });
     if (
       response.status === 200 &&
       response.body &&
