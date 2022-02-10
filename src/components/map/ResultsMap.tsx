@@ -5,6 +5,7 @@ import { Restaurant } from "../../utility/types";
 import { selectedMarker, unselectedMarker } from "../icons";
 import { SearchAreaButton } from "./SearchAreaButton";
 import { LatLong, ZoomType } from "./types";
+import { defaultCenter } from "./utility";
 import { ZoomButtons } from "./ZoomButtons";
 
 type ResultsMapsProps = {
@@ -19,8 +20,6 @@ export const mapContainerStyle = {
   width: "100%",
   height: "100%",
 };
-
-const defaultCenter: LatLong = { lat: 40.6779924, lng: -73.9960648 };
 
 function ResultsMap({ data }: ResultsMapsProps) {
   const { selected, setShouldFetchData, map, setMap } =

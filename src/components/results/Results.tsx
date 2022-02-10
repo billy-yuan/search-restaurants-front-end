@@ -31,6 +31,7 @@ function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
 
 function Results() {
   const {
+    map,
     shouldFetchData,
     setShouldFetchData,
     dataState,
@@ -44,7 +45,7 @@ function Results() {
     categories: [],
     price: [],
   });
-  const mapBounds = useMapBoundsToString();
+  const mapBounds = useMapBoundsToString(map);
   const navigate = useNavigate();
 
   if (!dataState.data) {
