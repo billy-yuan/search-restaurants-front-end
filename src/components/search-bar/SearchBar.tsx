@@ -9,6 +9,8 @@ import { Restaurant } from "../../utility/types";
 import { SearchIcon } from "../icons";
 import "./style.css";
 import { COLOR } from "../../styles/colors";
+import { buildeFetchDataUrl } from "../results/helper";
+import { useMapBoundsToString } from "../results/utility";
 
 const loadingStyle = {
   backgroundColor: COLOR.DARK_TEAL,
@@ -28,13 +30,14 @@ function SearchBar() {
     return emptyString || stringTooLong || isLoading;
   };
 
+  const mapBounds = useMapBoundsToString();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsError(false);
     setIsLoading(true);
     const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
     SearchUrl.addQueryParameter("q", [searchQuery]);
-    const url = SearchUrl.buildUrl();
+    const url = buildeFetchDataUrl(searchQuery, {}, mapBounds);
     const response = await fetchData(url);
     if (
       response.status === 200 &&

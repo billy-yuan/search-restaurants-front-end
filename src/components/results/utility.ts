@@ -1,6 +1,11 @@
 import { useContext } from "react";
 import { stateContext } from "../../utility/context/appState";
 
+const defaultMapBounds: { ne: string; sw: string } = {
+  ne: "40.77842,-73.94285",
+  sw: "40.578978,-74.04928",
+};
+
 /**
  * Returns NE and SW corners of the map area as a string in the following format:
  * `${lat}, ${long}`
@@ -10,7 +15,7 @@ import { stateContext } from "../../utility/context/appState";
 export function useMapBoundsToString(): { ne: string; sw: string } | null {
   const { map } = useContext(stateContext);
   if (!map) {
-    return null;
+    return defaultMapBounds;
   }
   const mapBounds = map.getBounds();
 
