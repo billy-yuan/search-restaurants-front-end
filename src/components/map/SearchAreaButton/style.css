@@ -14,9 +14,10 @@
   width: 200px;
   border-radius: 10px;
   font-weight: bold;
+  box-shadow: 0 2px 18px #00000026;
 }
 
 .search-area-button:hover {
   cursor: pointer;
-  box-shadow: 0 2px 18px #00000026;
+  box-shadow: 0 2px 18px #a2a6a4;
 }
