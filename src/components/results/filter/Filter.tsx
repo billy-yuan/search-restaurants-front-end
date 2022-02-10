@@ -12,6 +12,7 @@ type DropdownProps = {
   currentFilter: { [key: string]: string[] };
   setFilter: React.Dispatch<React.SetStateAction<{}>>;
   isDisabled: boolean;
+  onChange: () => void;
 };
 
 type FilterProps = {
@@ -19,6 +20,7 @@ type FilterProps = {
   currentFilter: { [key: string]: string[] };
   setFilter: React.Dispatch<React.SetStateAction<{}>>;
   isLoading: boolean;
+  onChange: () => void;
 };
 
 function Dropdown({
@@ -27,7 +29,13 @@ function Dropdown({
   currentFilter,
   setFilter,
   isDisabled = false,
+  onChange,
 }: DropdownProps) {
+  const selectedOptionsArray = currentFilter[dropdownName];
+  const values = options.filter((value) =>
+    selectedOptionsArray.includes(value.value)
+  );
+
   return (
     <div className="dropdown-container">
       <Select
@@ -36,7 +44,9 @@ function Dropdown({
         isDisabled={isDisabled}
         placeholder={dropdownName}
         options={options}
+        value={values}
         onChange={(e) => {
+          onChange();
           setFilter({
             ...currentFilter,
             [dropdownName]: e.map((option) => option.value),
@@ -52,6 +62,7 @@ function Filter({
   currentFilter,
   setFilter,
   isLoading,
+  onChange,
 }: FilterProps) {
   return (
     <div className="filter-container">
@@ -64,6 +75,7 @@ function Filter({
             currentFilter={currentFilter}
             setFilter={setFilter}
             isDisabled={isLoading}
+            onChange={onChange}
           />
         ))}
       </div>

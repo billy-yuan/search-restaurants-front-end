@@ -18,6 +18,12 @@ export type CurrentFilter = {
   [key: string]: string[];
 };
 
+const defaultFilter = {
+  articles: [],
+  categories: [],
+  price: [],
+};
+
 function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
   return (
     <>
@@ -39,12 +45,9 @@ function Results() {
     isLoading,
     setIsLoading,
   } = useContext(stateContext);
-  const [initialLoad, setInitialLoad] = useState<boolean>(true);
-  const [currentFilter, setCurrentFilter] = useState<CurrentFilter>({
-    articles: [],
-    categories: [],
-    price: [],
-  });
+
+  const [currentFilter, setCurrentFilter] =
+    useState<CurrentFilter>(defaultFilter);
   const mapBounds = useMapBoundsToString(map);
   const navigate = useNavigate();
 
@@ -72,15 +75,6 @@ function Results() {
         console.log(e);
       });
   };
-  // Refetch data when filters change
-  useEffect(() => {
-    if (!initialLoad) {
-      setIsLoading(true);
-      refreshData();
-    } else {
-      setInitialLoad(false);
-    }
-  }, [currentFilter]);
 
   // Refresh data in all other cases
   useEffect(() => {
@@ -99,7 +93,7 @@ function Results() {
             <Logo onClick={() => navigate("/")} />
           </div>
           <div className="results-header-search">
-            <SearchBar />
+            <SearchBar callback={() => setCurrentFilter(defaultFilter)} />
           </div>
         </div>
         <Filter
@@ -107,6 +101,7 @@ function Results() {
           currentFilter={currentFilter}
           setFilter={setCurrentFilter}
           isLoading={isLoading}
+          onChange={() => setShouldFetchData(true)}
         />
       </div>
       <div className="results-content-container">
