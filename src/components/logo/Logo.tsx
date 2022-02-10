@@ -1,11 +1,21 @@
+import { useState } from "react";
 import "./style.css";
 
 type LogoProps = {
   onClick?: () => void;
+  cursorToPointer?: boolean;
 };
-export function Logo({ onClick }: LogoProps) {
+export function Logo({ onClick, cursorToPointer = true }: LogoProps) {
+  const [style, setStyle] = useState<React.CSSProperties>({});
+
   return (
-    <div className="logo" onClick={() => onClick && onClick()}>
+    <div
+      style={style}
+      onMouseEnter={() => cursorToPointer && setStyle({ cursor: "pointer" })}
+      onMouseLeave={() => setStyle({})}
+      className="logo"
+      onClick={() => onClick && onClick()}
+    >
       Search Eater
     </div>
   );
