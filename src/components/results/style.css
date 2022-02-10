@@ -13,6 +13,12 @@
   z-index: 3;
 }
 
+.results-header-logo {
+  position: absolute;
+  left: 50px;
+  top: 30px;
+}
+
 .sidebar-container {
   margin: 20px;
   width: 500px;

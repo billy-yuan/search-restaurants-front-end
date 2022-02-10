@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Filter from "./filter";
 import RestaurantCard from "../restaurant-card";
 import { useContext, useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import "./style.css";
 import ResultsMap from "../map/ResultsMap";
 import { useMapBoundsToString } from "./utility";
 import { buildFetchDataUrl } from "./helper";
+import { Logo } from "../logo";
 
 export type CurrentFilter = {
   [key: string]: string[];
@@ -44,6 +45,7 @@ function Results() {
     price: [],
   });
   const mapBounds = useMapBoundsToString();
+  const navigate = useNavigate();
 
   if (!dataState.data) {
     return <Navigate to="/" />;
@@ -91,8 +93,13 @@ function Results() {
   return (
     <div className="results-container">
       <div className="results-header">
-        <div className="results-header-search">
-          <SearchBar />
+        <div className="results-header-top-row">
+          <div className="results-header-logo">
+            <Logo onClick={() => navigate("/")} />
+          </div>
+          <div className="results-header-search">
+            <SearchBar />
+          </div>
         </div>
         <Filter
           filterOptions={filterOptions}
