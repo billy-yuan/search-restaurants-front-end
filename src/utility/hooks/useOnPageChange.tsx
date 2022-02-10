@@ -1,12 +1,10 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { stateContext } from "../context/appState";
 
-export function useOnPageChange() {
+export function useOnPageChange(callback: () => void) {
   const location = useLocation();
-  const { setMap } = useContext(stateContext);
 
   useEffect(() => {
-    setMap(null);
+    callback();
   }, [location.pathname]);
 }
