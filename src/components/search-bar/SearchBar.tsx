@@ -14,6 +14,9 @@ import { useMapBoundsToString } from "../results/utility";
 import { defaultCenter, defaultZoom, setMapArea } from "../map/utility";
 import { MAP_PROPERTIES } from "../map/types";
 
+type SearchBarProps = {
+  callback?: () => void;
+};
 const loadingStyle = {
   backgroundColor: COLOR.DARK_TEAL,
 };
@@ -26,7 +29,7 @@ function handleMapAfterSearch(map: google.maps.Map | null) {
   });
 }
 
-function SearchBar() {
+function SearchBar({ callback }: SearchBarProps) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
   let mapBounds: {
@@ -66,6 +69,9 @@ function SearchBar() {
     const response = await fetchData(url).then((res) => {
       // Requirement is that the map area ia reset if the user uses the search bar.
       handleMapAfterSearch(map);
+      if (callback) {
+        callback();
+      }
       return res;
     });
     if (
