@@ -2,7 +2,7 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useContext, useState } from "react";
 import { stateContext } from "../../utility/context/appState";
 import { Restaurant } from "../../utility/types";
-import { selectedMarker } from "../icons";
+import { selectedMarker, unselectedMarker } from "../icons";
 import { SearchAreaButton } from "./SearchAreaButton";
 import { LatLong, ZoomType } from "./types";
 import { ZoomButtons } from "./ZoomButtons";
@@ -23,7 +23,8 @@ export const mapContainerStyle = {
 const defaultCenter: LatLong = { lat: 40.6779924, lng: -73.9960648 };
 
 function ResultsMap({ data }: ResultsMapsProps) {
-  const { setShouldFetchData, map, setMap } = useContext(stateContext);
+  const { selected, setShouldFetchData, map, setMap } =
+    useContext(stateContext);
   const [showRedoSearch, setShowRedoSearch] = useState<boolean>(false);
 
   const handleZoomClick = (zoomType: ZoomType) => {
@@ -71,7 +72,11 @@ function ResultsMap({ data }: ResultsMapsProps) {
             (entry) =>
               entry.coordinates && (
                 <Marker
-                  icon={selectedMarker}
+                  icon={
+                    selected?._id === entry._id
+                      ? selectedMarker
+                      : unselectedMarker
+                  }
                   position={{
                     lat: entry.coordinates.latitude,
                     lng: entry.coordinates.longitude,
