@@ -7,6 +7,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.7.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-loader-spinner": "^5.1.2",
@@ -16,6 +17,7 @@
   "devDependencies": {
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
+    "@types/supercluster": "^5.0.3",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
     "@vitejs/plugin-react": "^1.0.7",

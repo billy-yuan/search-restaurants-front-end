@@ -8,6 +8,7 @@ class UrlBuilder {
 
   addQueryParameter(parameterName: string, parameter: string[]) {
     this.queryParameters[parameterName] = parameter;
+    return this;
   }
 
   buildUrl() {

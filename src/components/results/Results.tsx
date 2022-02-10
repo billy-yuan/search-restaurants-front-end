@@ -3,16 +3,17 @@ import Filter from "./filter";
 import RestaurantCard from "../restaurant-card";
 import { useContext, useEffect, useState } from "react";
 import { fetchData } from "../../utility/api";
-import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
 import { createFilters } from "./filter/helpers";
-import UrlBuilder from "../../utility/urlBuilder";
 import { Restaurant } from "../../utility/types";
 import SearchBar from "../search-bar";
 import { Grid } from "react-loader-spinner";
 import { stateContext } from "../../utility/context/appState";
 import "./style.css";
+import ResultsMap from "../map/ResultsMap";
+import { useMapBoundsToString } from "./utility";
+import { buildFetchDataUrl } from "./helper";
 
-type CurrentFilter = {
+export type CurrentFilter = {
   [key: string]: string[];
 };
 
@@ -28,14 +29,21 @@ function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
 }
 
 function Results() {
-  const { dataState, setDataState, isLoading, setIsLoading } =
-    useContext(stateContext);
+  const {
+    shouldFetchData,
+    setShouldFetchData,
+    dataState,
+    setDataState,
+    isLoading,
+    setIsLoading,
+  } = useContext(stateContext);
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
   const [currentFilter, setCurrentFilter] = useState<CurrentFilter>({
     articles: [],
     categories: [],
     price: [],
   });
+  const mapBounds = useMapBoundsToString();
 
   if (!dataState.data) {
     return <Navigate to="/" />;
@@ -43,41 +51,42 @@ function Results() {
 
   const filterOptions = createFilters(dataState.data);
 
+  const refreshData = async () => {
+    // Create URL
+    const url = buildFetchDataUrl(dataState.query, currentFilter, mapBounds);
+
+    fetchData(url)
+      .then((res) => {
+        let body: Restaurant[] = [];
+        if (res.status === 200) {
+          body = res.body ? (res.body as Restaurant[]) : [];
+        }
+        setDataState({ ...dataState, data: body });
+        setIsLoading(false);
+      })
+      .catch((e) => {
+        setIsLoading(false);
+        console.log(e);
+      });
+  };
   // Refetch data when filters change
   useEffect(() => {
-    // Create URL
-    const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
-    SearchUrl.addQueryParameter("q", [dataState.query]);
-    for (let name of Object.keys(currentFilter)) {
-      let filter = currentFilter[name];
-      if (filter.length > 0) {
-        SearchUrl.addQueryParameter(name, currentFilter[name]);
-      }
-    }
-    // Fetch data
-    const refreshData = async (url: string) => {
-      fetchData(url)
-        .then((res) => {
-          let body: Restaurant[] = [];
-          if (res.status === 200) {
-            body = res.body ? (res.body as Restaurant[]) : [];
-          }
-          setDataState({ ...dataState, data: body });
-          setIsLoading(false);
-        })
-        .catch((e) => {
-          setIsLoading(false);
-          console.log(e);
-        });
-    };
     if (!initialLoad) {
       setIsLoading(true);
-      const url = SearchUrl.buildUrl();
-      refreshData(url);
+      refreshData();
     } else {
       setInitialLoad(false);
     }
   }, [currentFilter]);
+
+  // Refresh data in all other cases
+  useEffect(() => {
+    if (shouldFetchData) {
+      setIsLoading(true);
+      refreshData();
+    }
+    return () => setShouldFetchData(false);
+  }, [shouldFetchData]);
 
   return (
     <div className="results-container">
@@ -92,12 +101,17 @@ function Results() {
           isLoading={isLoading}
         />
       </div>
-      <div className="sidebar-container">
-        {isLoading ? (
-          <Grid />
-        ) : (
-          <ResultsList data={dataState.data} query={dataState.query} />
-        )}
+      <div className="results-content-container">
+        <div className="sidebar-container">
+          {isLoading ? (
+            <Grid />
+          ) : (
+            <ResultsList data={dataState.data} query={dataState.query} />
+          )}
+        </div>
+        <div className="map-container">
+          <ResultsMap data={dataState.data} />
+        </div>
       </div>
     </div>
   );

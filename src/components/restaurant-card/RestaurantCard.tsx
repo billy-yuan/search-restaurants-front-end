@@ -1,3 +1,5 @@
+import { useContext, useState } from "react";
+import { stateContext } from "../../utility/context/appState";
 import { Article, Restaurant } from "../../utility/types";
 import { LinkButton } from "../icons";
 
@@ -51,8 +53,14 @@ function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
     `${restaurant.name} ${restaurant.address}`
   );
 
+  const { setSelected } = useContext(stateContext);
+
   return (
-    <div className="restaurant-card-container">
+    <div
+      className="restaurant-card-container"
+      onMouseEnter={() => setSelected(restaurant)}
+      onMouseLeave={() => setSelected(null)}
+    >
       <div className="restaurant-card-title">{restaurant.name}</div>
       <br />
       <div className="restautant-card-address">{restaurant.address}</div>
