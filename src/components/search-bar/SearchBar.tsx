@@ -71,6 +71,7 @@ function SearchBar() {
             type="text"
             onChange={(e) => setSearchQuery(e.target.value)}
             disabled={isLoading}
+            placeholder="Type a name, article, or mood"
           />
 
           <button
