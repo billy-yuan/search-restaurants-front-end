@@ -11,7 +11,7 @@ import { stateContext } from "../../utility/context/appState";
 import "./style.css";
 import ResultsMap from "../map/ResultsMap";
 import { useMapBoundsToString } from "./utility";
-import { buildeFetchDataUrl } from "./helper";
+import { buildFetchDataUrl } from "./helper";
 
 export type CurrentFilter = {
   [key: string]: string[];
@@ -53,7 +53,7 @@ function Results() {
 
   const refreshData = async () => {
     // Create URL
-    const url = buildeFetchDataUrl(dataState.query, currentFilter, mapBounds);
+    const url = buildFetchDataUrl(dataState.query, currentFilter, mapBounds);
 
     fetchData(url)
       .then((res) => {

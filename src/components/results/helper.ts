@@ -2,7 +2,7 @@ import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
 import UrlBuilder from "../../utility/urlBuilder";
 import { CurrentFilter } from "./Results";
 
-export function buildeFetchDataUrl(
+export function buildFetchDataUrl(
   query: string,
   filters: CurrentFilter,
   mapBounds: {

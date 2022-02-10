@@ -9,7 +9,7 @@ import { Restaurant } from "../../utility/types";
 import { SearchIcon } from "../icons";
 import "./style.css";
 import { COLOR } from "../../styles/colors";
-import { buildeFetchDataUrl } from "../results/helper";
+import { buildFetchDataUrl } from "../results/helper";
 import { useMapBoundsToString } from "../results/utility";
 
 const loadingStyle = {
@@ -40,7 +40,7 @@ function SearchBar() {
     // https://github.com/billy-yuan/search-restaurants-front-end/issues/18
     const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
     SearchUrl.addQueryParameter("q", [searchQuery]);
-    const url = buildeFetchDataUrl(searchQuery, {}, mapBounds);
+    const url = buildFetchDataUrl(searchQuery, {}, mapBounds);
     const response = await fetchData(url);
     if (
       response.status === 200 &&
