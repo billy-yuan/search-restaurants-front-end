@@ -35,6 +35,9 @@ function SearchBar() {
     e.preventDefault();
     setIsError(false);
     setIsLoading(true);
+
+    // TODO: Only use buildFetchDataUrl
+    // https://github.com/billy-yuan/search-restaurants-front-end/issues/18
     const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
     SearchUrl.addQueryParameter("q", [searchQuery]);
     const url = buildeFetchDataUrl(searchQuery, {}, mapBounds);
