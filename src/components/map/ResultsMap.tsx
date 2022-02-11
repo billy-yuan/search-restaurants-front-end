@@ -6,7 +6,7 @@ import { Restaurant } from "../../utility/types";
 import { selectedMarker, unselectedMarker } from "../icons";
 import { Overlay } from "./Overlay";
 import { SearchAreaButton } from "./SearchAreaButton";
-import { LatLong, ZoomType } from "./types";
+import { ZoomType } from "./types";
 import { defaultCenter } from "./utility";
 import { ZoomButtons } from "./ZoomButtons";
 
@@ -27,14 +27,16 @@ function ResultsMap({ data }: ResultsMapsProps) {
   const { selected, setSelected, setShouldFetchData, map, setMap } =
     useContext(stateContext);
   const [showRedoSearch, setShowRedoSearch] = useState<boolean>(false);
-  const [isMouseover, setIsMouseover] = useState<boolean>(false);
+  const [isMouseoverOverlay, setIsMouseoverOverlay] = useState<boolean>(false);
+  const [isMouseoverMarker, setIsMouseoverMarker] = useState<boolean>(false);
 
   const handleMarkerMouseOut = () => {
     setTimeout(() => {
-      if (!isMouseover) {
+      setIsMouseoverMarker(false);
+      if (!isMouseoverOverlay) {
         setSelected(null);
       }
-    }, 40);
+    }, 30);
   };
 
   const handleZoomClick = (zoomType: ZoomType) => {
@@ -85,8 +87,9 @@ function ResultsMap({ data }: ResultsMapsProps) {
                 <>
                   <Overlay
                     restaurant={entry}
-                    isMouseover={isMouseover}
-                    setIsMouseover={setIsMouseover}
+                    isMouseoverOverlay={isMouseoverOverlay}
+                    setIsMouseoverOverlay={setIsMouseoverOverlay}
+                    isMouseoverMarker={isMouseoverMarker}
                   />
                   <Marker
                     onClick={() => {
@@ -95,7 +98,10 @@ function ResultsMap({ data }: ResultsMapsProps) {
                         "_blank"
                       );
                     }}
-                    onMouseOver={() => setSelected(entry)}
+                    onMouseOver={() => {
+                      setIsMouseoverMarker(true);
+                      setSelected(entry);
+                    }}
                     onMouseOut={() => handleMarkerMouseOut()}
                     icon={
                       selected?._id === entry._id

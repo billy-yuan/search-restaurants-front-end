@@ -8,20 +8,26 @@ import "./style.css";
 
 type OverlayProps = {
   restaurant: Restaurant;
-  isMouseover: boolean;
-  setIsMouseover: React.Dispatch<React.SetStateAction<boolean>>;
+  isMouseoverOverlay: boolean;
+  setIsMouseoverOverlay: React.Dispatch<React.SetStateAction<boolean>>;
+  isMouseoverMarker: boolean;
 };
 export function Overlay({
   restaurant,
-  isMouseover,
-  setIsMouseover,
+  isMouseoverOverlay,
+  setIsMouseoverOverlay,
+  isMouseoverMarker,
 }: OverlayProps) {
   const { selected, setSelected } = useContext(stateContext);
   if (selected?._id !== restaurant._id) {
     return <></>;
   }
 
-  if (!selected?.coordinates) {
+  if (!isMouseoverOverlay && !isMouseoverMarker) {
+    return <></>;
+  }
+
+  if (!selected) {
     return <></>;
   }
 
@@ -39,12 +45,12 @@ export function Overlay({
     >
       <div
         className="map-overlay-container"
-        onMouseEnter={() => {
-          setIsMouseover(true);
-        }}
+        onMouseEnter={() => setIsMouseoverOverlay(true)}
         onMouseLeave={() => {
-          setIsMouseover(false);
-          setSelected(null);
+          setIsMouseoverOverlay(false);
+          if (!isMouseoverMarker) {
+            setSelected(null);
+          }
         }}
       >
         <div className="map-overlay-name">{restaurant.name}</div>
