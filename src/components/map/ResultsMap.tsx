@@ -26,6 +26,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
   const { selected, setSelected, setShouldFetchData, map, setMap } =
     useContext(stateContext);
   const [showRedoSearch, setShowRedoSearch] = useState<boolean>(false);
+  const [isMouseover, setIsMouseover] = useState<boolean>(false);
 
   const handleZoomClick = (zoomType: ZoomType) => {
     const zoomLevel = map?.getZoom();
@@ -68,24 +69,38 @@ function ResultsMap({ data }: ResultsMapsProps) {
           >
             {showRedoSearch && <SearchAreaButton callback={() => null} />}
           </div>
-          <Overlay />
+
           {data.map(
             (entry) =>
               entry.coordinates && (
-                <Marker
-                  onClick={() => {
-                    setSelected(entry);
-                  }}
-                  icon={
-                    selected?._id === entry._id
-                      ? selectedMarker
-                      : unselectedMarker
-                  }
-                  position={{
-                    lat: entry.coordinates.latitude,
-                    lng: entry.coordinates.longitude,
-                  }}
-                />
+                <>
+                  <Overlay
+                    restaurant={entry}
+                    isMouseover={isMouseover}
+                    setIsMouseover={setIsMouseover}
+                  />
+                  <Marker
+                    onMouseOver={() => {
+                      setSelected(entry);
+                    }}
+                    onMouseOut={() => {
+                      setTimeout(() => {
+                        if (!isMouseover) {
+                          setSelected(null);
+                        }
+                      }, 200);
+                    }}
+                    icon={
+                      selected?._id === entry._id
+                        ? selectedMarker
+                        : unselectedMarker
+                    }
+                    position={{
+                      lat: entry.coordinates.latitude,
+                      lng: entry.coordinates.longitude,
+                    }}
+                  />
+                </>
               )
           )}
         </GoogleMap>
