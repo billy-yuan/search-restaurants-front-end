@@ -29,6 +29,14 @@ function ResultsMap({ data }: ResultsMapsProps) {
   const [showRedoSearch, setShowRedoSearch] = useState<boolean>(false);
   const [isMouseover, setIsMouseover] = useState<boolean>(false);
 
+  const handleMarkerMouseOut = () => {
+    setTimeout(() => {
+      if (!isMouseover) {
+        setSelected(null);
+      }
+    }, 40);
+  };
+
   const handleZoomClick = (zoomType: ZoomType) => {
     const zoomLevel = map?.getZoom();
     if (!map || zoomLevel === undefined) {
@@ -90,13 +98,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
                     onMouseOver={() => {
                       setSelected(entry);
                     }}
-                    onMouseOut={() => {
-                      setTimeout(() => {
-                        if (!isMouseover) {
-                          setSelected(null);
-                        }
-                      }, 40);
-                    }}
+                    onMouseOut={() => handleMarkerMouseOut()}
                     icon={
                       selected?._id === entry._id
                         ? selectedMarker
