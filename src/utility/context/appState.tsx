@@ -17,6 +17,8 @@ export type AppState = {
   setShouldFetchData: React.Dispatch<React.SetStateAction<boolean>>;
   selected: Restaurant | null;
   setSelected: React.Dispatch<React.SetStateAction<Restaurant | null>>;
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 };
 
 function StateContext() {
@@ -31,6 +33,8 @@ function StateContext() {
     setShouldFetchData: () => null,
     selected: null,
     setSelected: () => null,
+    searchQuery: "",
+    setSearchQuery: () => null,
   });
 }
 
@@ -45,6 +49,7 @@ function StateContextProvider({ children }: any) {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [shouldFetchData, setShouldFetchData] = useState<boolean>(false);
   const [selected, setSelected] = useState<Restaurant | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const appState: AppState = {
     dataState,
@@ -57,6 +62,8 @@ function StateContextProvider({ children }: any) {
     setShouldFetchData,
     selected,
     setSelected,
+    searchQuery,
+    setSearchQuery,
   };
 
   return (

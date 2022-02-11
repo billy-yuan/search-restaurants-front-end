@@ -31,15 +31,21 @@ function handleMapAfterSearch(map: google.maps.Map | null) {
 
 function SearchBar({ callback }: SearchBarProps) {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState<string>("");
   let mapBounds: {
     ne: string;
     sw: string;
   } | null = null;
   const [isError, setIsError] = useState<boolean>(false);
 
-  const { map, setMap, setDataState, isLoading, setIsLoading } =
-    useContext(stateContext);
+  const {
+    map,
+    setMap,
+    setDataState,
+    isLoading,
+    setIsLoading,
+    searchQuery,
+    setSearchQuery,
+  } = useContext(stateContext);
 
   const disableSearch = (query: string): boolean => {
     const emptyString = query === "";
@@ -101,6 +107,7 @@ function SearchBar({ callback }: SearchBarProps) {
         <div className="search-container">
           <input
             className="search-bar"
+            value={searchQuery}
             type="text"
             onChange={(e) => setSearchQuery(e.target.value)}
             disabled={isLoading}
