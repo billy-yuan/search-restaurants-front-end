@@ -1,16 +1,10 @@
 import { useContext, useState } from "react";
 import { stateContext } from "../../utility/context/appState";
+import { makeGoogleMapsUrl } from "../../utility/makeGoogleMapsUrl";
 import { Article, Restaurant } from "../../utility/types";
 import { LinkButton } from "../icons";
 
 import "./style.css";
-
-function makeGoogleMapsUrl(query: string) {
-  const GOOGLE_MAPS_SEARCH_URL = "https://www.google.com/maps/search";
-  const parameters = `${query}`.split(" ").join("+");
-
-  return `${GOOGLE_MAPS_SEARCH_URL}/${parameters}`;
-}
 
 function formatDate(dateString: string): string | null {
   if (!dateString) {
