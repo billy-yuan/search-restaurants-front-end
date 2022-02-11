@@ -95,9 +95,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
                         "_blank"
                       );
                     }}
-                    onMouseOver={() => {
-                      setSelected(entry);
-                    }}
+                    onMouseOver={() => setSelected(entry)}
                     onMouseOut={() => handleMarkerMouseOut()}
                     icon={
                       selected?._id === entry._id
