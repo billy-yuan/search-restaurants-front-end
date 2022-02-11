@@ -1,6 +1,7 @@
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useContext, useState } from "react";
 import { stateContext } from "../../utility/context/appState";
+import { makeGoogleMapsUrl } from "../../utility/makeGoogleMapsUrl";
 import { Restaurant } from "../../utility/types";
 import { selectedMarker, unselectedMarker } from "../icons";
 import { Overlay } from "./Overlay";
@@ -80,6 +81,12 @@ function ResultsMap({ data }: ResultsMapsProps) {
                     setIsMouseover={setIsMouseover}
                   />
                   <Marker
+                    onClick={() => {
+                      window.open(
+                        makeGoogleMapsUrl(`${entry.name} ${entry.address}`),
+                        "_blank"
+                      );
+                    }}
                     onMouseOver={() => {
                       setSelected(entry);
                     }}
@@ -88,7 +95,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
                         if (!isMouseover) {
                           setSelected(null);
                         }
-                      }, 200);
+                      }, 10);
                     }}
                     icon={
                       selected?._id === entry._id
@@ -99,7 +106,9 @@ function ResultsMap({ data }: ResultsMapsProps) {
                       lat: entry.coordinates.latitude,
                       lng: entry.coordinates.longitude,
                     }}
-                  />
+                  >
+                    <a href={`${"www.google.com"}`} target="_blank" />
+                  </Marker>
                 </>
               )
           )}
