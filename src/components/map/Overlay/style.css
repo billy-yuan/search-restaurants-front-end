@@ -1,0 +1,15 @@
+.map-overlay-container {
+  background-color: white;
+  min-width: 100px;
+  min-height: 50px;
+  padding: 10px;
+}
+
+.map-overlay-name {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.map-overlay-categories {
+  font-size: 13px;
+}

@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { stateContext } from "../../utility/context/appState";
 import { Restaurant } from "../../utility/types";
 import { selectedMarker, unselectedMarker } from "../icons";
+import { Overlay } from "./Overlay";
 import { SearchAreaButton } from "./SearchAreaButton";
 import { LatLong, ZoomType } from "./types";
 import { defaultCenter } from "./utility";
@@ -22,7 +23,7 @@ export const mapContainerStyle = {
 };
 
 function ResultsMap({ data }: ResultsMapsProps) {
-  const { selected, setShouldFetchData, map, setMap } =
+  const { selected, setSelected, setShouldFetchData, map, setMap } =
     useContext(stateContext);
   const [showRedoSearch, setShowRedoSearch] = useState<boolean>(false);
 
@@ -67,10 +68,14 @@ function ResultsMap({ data }: ResultsMapsProps) {
           >
             {showRedoSearch && <SearchAreaButton callback={() => null} />}
           </div>
+          <Overlay />
           {data.map(
             (entry) =>
               entry.coordinates && (
                 <Marker
+                  onClick={() => {
+                    setSelected(entry);
+                  }}
                   icon={
                     selected?._id === entry._id
                       ? selectedMarker
