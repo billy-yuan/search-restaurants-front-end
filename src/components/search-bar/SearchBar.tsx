@@ -65,6 +65,7 @@ function SearchBar({ callback }: SearchBarProps) {
     const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
     SearchUrl.addQueryParameter("q", [searchQuery]);
 
+    mapBounds = useMapBoundsToString(null);
     const url = buildFetchDataUrl(searchQuery, {}, mapBounds);
     const response = await fetchData(url).then((res) => {
       // Requirement is that the map area ia reset if the user uses the search bar.
