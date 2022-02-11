@@ -95,7 +95,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
                         if (!isMouseover) {
                           setSelected(null);
                         }
-                      }, 10);
+                      }, 40);
                     }}
                     icon={
                       selected?._id === entry._id
