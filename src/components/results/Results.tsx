@@ -28,6 +28,7 @@ function Results() {
   const {
     map,
     searchQuery,
+    setSearchQuery,
     currentFilter,
     setCurrentFilter,
     shouldFetchData,
@@ -79,6 +80,17 @@ function Results() {
     setIsLoading(true);
     refreshData();
   }, [location.search]);
+
+  // Update searchQuery based on url param
+  useEffect(() => {
+    if (searchQuery === "") {
+      const parsedUrl = new URL(window.location.href);
+      const q = parsedUrl.searchParams.get("q");
+      if (q) {
+        setSearchQuery(q);
+      }
+    }
+  }, []);
 
   return (
     <div className="results-container">
