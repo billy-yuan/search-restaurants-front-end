@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { Restaurant } from "../types";
+import { CurrentFilter, Restaurant } from "../types";
 
 type ResultsState = {
   query: string;
@@ -19,6 +19,14 @@ export type AppState = {
   setSelected: React.Dispatch<React.SetStateAction<Restaurant | null>>;
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  currentFilter: CurrentFilter;
+  setCurrentFilter: React.Dispatch<React.SetStateAction<CurrentFilter>>;
+};
+
+const defaultFilter = {
+  articles: [],
+  categories: [],
+  price: [],
 };
 
 function StateContext() {
@@ -35,6 +43,8 @@ function StateContext() {
     setSelected: () => null,
     searchQuery: "",
     setSearchQuery: () => null,
+    currentFilter: defaultFilter,
+    setCurrentFilter: () => null,
   });
 }
 
@@ -50,6 +60,8 @@ function StateContextProvider({ children }: any) {
   const [shouldFetchData, setShouldFetchData] = useState<boolean>(false);
   const [selected, setSelected] = useState<Restaurant | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [currentFilter, setCurrentFilter] =
+    useState<CurrentFilter>(defaultFilter);
 
   const appState: AppState = {
     dataState,
@@ -64,6 +76,8 @@ function StateContextProvider({ children }: any) {
     setSelected,
     searchQuery,
     setSearchQuery,
+    currentFilter,
+    setCurrentFilter,
   };
 
   return (
@@ -71,4 +85,4 @@ function StateContextProvider({ children }: any) {
   );
 }
 
-export { stateContext, StateContextProvider };
+export { defaultFilter, stateContext, StateContextProvider };

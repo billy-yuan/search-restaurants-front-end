@@ -21,3 +21,7 @@ export type Article = {
   url: string;
   published_date: string;
 };
+
+export type CurrentFilter = {
+  [key: string]: string[];
+};

@@ -22,3 +22,21 @@ export function setMapArea(
     }
   }
 }
+
+export function getMapBoundsFromCurrentUrl() {
+  const parsedUrl = new URL(window.location.href);
+  const neBound = parsedUrl.searchParams.get("ne_bound")?.split(",");
+  const swBound = parsedUrl.searchParams.get("sw_bound")?.split(",");
+
+  if (neBound && swBound) {
+    const neLatLng = new google.maps.LatLng(
+      Number(neBound[0]),
+      Number(neBound[1])
+    );
+    const swLatLng = new google.maps.LatLng(
+      Number(swBound[0]),
+      Number(swBound[1])
+    );
+    return new google.maps.LatLngBounds(swLatLng, neLatLng);
+  }
+}

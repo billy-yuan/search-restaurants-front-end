@@ -1,13 +1,15 @@
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { stateContext } from "../../utility/context/appState";
 import { makeGoogleMapsUrl } from "../../utility/makeGoogleMapsUrl";
 import { Restaurant } from "../../utility/types";
 import { selectedMarker, unselectedMarker } from "../icons";
+import { buildFetchDataUrl } from "../results/helper";
 import { Overlay } from "./Overlay";
 import { SearchAreaButton } from "./SearchAreaButton";
 import { ZoomType } from "./types";
-import { defaultCenter } from "./utility";
+import { defaultCenter, getMapBoundsFromCurrentUrl } from "./utility";
 import { ZoomButtons } from "./ZoomButtons";
 
 type ResultsMapsProps = {
@@ -24,8 +26,9 @@ export const mapContainerStyle = {
 };
 
 function ResultsMap({ data }: ResultsMapsProps) {
-  const { selected, setSelected, setShouldFetchData, map, setMap } =
+  const { currentFilter, searchQuery, selected, setSelected, map, setMap } =
     useContext(stateContext);
+  const navigate = useNavigate();
   const [showRedoSearch, setShowRedoSearch] = useState<boolean>(false);
   const [isMouseoverOverlay, setIsMouseoverOverlay] = useState<boolean>(false);
   const [isMouseoverMarker, setIsMouseoverMarker] = useState<boolean>(false);
@@ -61,7 +64,13 @@ function ResultsMap({ data }: ResultsMapsProps) {
     <>
       <LoadScript googleMapsApiKey={apiKey}>
         <GoogleMap
-          onLoad={(m) => setMap(m)}
+          onLoad={(m) => {
+            const bounds = getMapBoundsFromCurrentUrl();
+            if (bounds) {
+              m.fitBounds(bounds, 0);
+            }
+            setMap(m);
+          }}
           zoom={12}
           center={defaultCenter}
           mapContainerStyle={mapContainerStyle}
@@ -75,7 +84,8 @@ function ResultsMap({ data }: ResultsMapsProps) {
           <div
             onClick={() => {
               setShowRedoSearch(false);
-              setShouldFetchData(true);
+              const url = buildFetchDataUrl(searchQuery, currentFilter, map);
+              navigate(`/results?${url.encodeParameters()}`);
             }}
           >
             {showRedoSearch && <SearchAreaButton callback={() => null} />}

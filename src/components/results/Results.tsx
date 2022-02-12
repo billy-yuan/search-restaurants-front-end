@@ -1,28 +1,17 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Filter from "./filter";
 import RestaurantCard from "../restaurant-card";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { fetchData } from "../../utility/api";
 import { createFilters } from "./filter/helpers";
 import { Restaurant } from "../../utility/types";
 import SearchBar from "../search-bar";
 import { Grid } from "react-loader-spinner";
-import { stateContext } from "../../utility/context/appState";
+import { defaultFilter, stateContext } from "../../utility/context/appState";
 import "./style.css";
 import ResultsMap from "../map/ResultsMap";
-import { useMapBoundsToString } from "./utility";
-import { buildFetchDataUrl } from "./helper";
+import { buildFetchDataUrl, buildFetchDataUrlFromSearchParams } from "./helper";
 import { Logo } from "../logo";
-
-export type CurrentFilter = {
-  [key: string]: string[];
-};
-
-const defaultFilter = {
-  articles: [],
-  categories: [],
-  price: [],
-};
 
 function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
   return (
@@ -38,6 +27,9 @@ function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
 function Results() {
   const {
     map,
+    searchQuery,
+    currentFilter,
+    setCurrentFilter,
     shouldFetchData,
     setShouldFetchData,
     dataState,
@@ -46,20 +38,17 @@ function Results() {
     setIsLoading,
   } = useContext(stateContext);
 
-  const [currentFilter, setCurrentFilter] =
-    useState<CurrentFilter>(defaultFilter);
-  const mapBounds = useMapBoundsToString(map);
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (!dataState.data) {
     return <Navigate to="/" />;
   }
-
   const filterOptions = createFilters(dataState.data);
 
   const refreshData = async () => {
     // Create URL
-    const url = buildFetchDataUrl(dataState.query, currentFilter, mapBounds);
+    const url = buildFetchDataUrlFromSearchParams(location.search);
 
     fetchData(url)
       .then((res) => {
@@ -76,7 +65,7 @@ function Results() {
       });
   };
 
-  // Refresh data in all other cases
+  // Refresh data in all other cases (i.e. click on redo map search )
   useEffect(() => {
     if (shouldFetchData) {
       setIsLoading(true);
@@ -84,6 +73,12 @@ function Results() {
     }
     return () => setShouldFetchData(false);
   }, [shouldFetchData]);
+
+  // Refresh data when query params change
+  useEffect(() => {
+    setIsLoading(true);
+    refreshData();
+  }, [location.search]);
 
   return (
     <div className="results-container">
@@ -101,7 +96,12 @@ function Results() {
           currentFilter={currentFilter}
           setFilter={setCurrentFilter}
           isLoading={isLoading}
-          onChange={() => setShouldFetchData(true)}
+          onChange={() => {
+            const url = buildFetchDataUrl(searchQuery, currentFilter, map);
+            navigate(`/results?${url.encodeParameters()}`);
+            setIsLoading(true);
+            setShouldFetchData(true);
+          }}
         />
       </div>
       <div className="results-content-container">

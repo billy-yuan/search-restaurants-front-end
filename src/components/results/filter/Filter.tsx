@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Select from "react-select";
 import "./style.css";
 
@@ -36,6 +37,12 @@ function Dropdown({
     selectedOptionsArray.includes(value.value)
   );
 
+  // if onChange() goes in the onChange callback, the state won't update.
+  // So we have to use useEffect to force this onChange() function to fire.
+  useEffect(() => {
+    onChange();
+  }, [currentFilter]);
+
   return (
     <div className="dropdown-container">
       <Select
@@ -46,7 +53,6 @@ function Dropdown({
         options={options}
         value={values}
         onChange={(e) => {
-          onChange();
           setFilter({
             ...currentFilter,
             [dropdownName]: e.map((option) => option.value),
