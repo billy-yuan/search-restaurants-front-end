@@ -1,5 +1,6 @@
 import { useContext, useEffect } from "react";
 import Select from "react-select";
+import { capitalizeString } from "../../../utility/capitalizeString";
 import { stateContext } from "../../../utility/context/appState";
 import "./style.css";
 
@@ -62,15 +63,17 @@ function Dropdown({
     <div className="dropdown-container">
       <Select
         name={dropdownName}
-        isMulti
+        isMulti={false}
         isDisabled={isDisabled}
-        placeholder={dropdownName}
+        placeholder={capitalizeString(dropdownName)}
         options={options}
         value={values}
+        isClearable={true}
         onChange={(e) => {
+          const newValue = e ? [e.value] : [];
           setCurrentFilter({
             ...currentFilter,
-            [dropdownName]: e.map((option) => option.value),
+            [dropdownName]: newValue,
           });
         }}
       />
