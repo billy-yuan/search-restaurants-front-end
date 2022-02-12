@@ -100,8 +100,6 @@ function Results() {
         </div>
         <Filter
           filterOptions={filterOptions}
-          currentFilter={currentFilter}
-          setFilter={setCurrentFilter}
           isLoading={isLoading}
           onChange={() => {
             const url = buildFetchDataUrl(searchQuery, currentFilter, map);
