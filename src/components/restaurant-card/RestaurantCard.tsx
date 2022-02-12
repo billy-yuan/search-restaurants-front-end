@@ -1,4 +1,5 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
+import { COLOR } from "../../styles/colors";
 import { stateContext } from "../../utility/context/appState";
 import { makeGoogleMapsUrl } from "../../utility/makeGoogleMapsUrl";
 import { Article, Restaurant } from "../../utility/types";
@@ -6,6 +7,9 @@ import { LinkButton } from "../icons";
 
 import "./style.css";
 
+const selectedCardStyle = {
+  boxShadow: " 0 2px 18px #00000026",
+};
 function formatDate(dateString: string): string | null {
   if (!dateString) {
     return null;
@@ -47,13 +51,14 @@ function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
     `${restaurant.name} ${restaurant.address}`
   );
 
-  const { setSelected } = useContext(stateContext);
+  const { selected, setSelected } = useContext(stateContext);
 
   return (
     <div
       className="restaurant-card-container"
       onMouseEnter={() => setSelected(restaurant)}
       onMouseLeave={() => setSelected(null)}
+      style={selected?._id === restaurant._id ? selectedCardStyle : {}}
     >
       <div className="restaurant-card-title">{restaurant.name}</div>
       <br />
