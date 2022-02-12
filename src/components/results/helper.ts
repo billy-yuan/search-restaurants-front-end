@@ -8,8 +8,7 @@ export function buildFetchDataUrl(
   mapBounds: {
     ne: string;
     sw: string;
-  } | null,
-  path?: string
+  } | null
 ): UrlBuilder {
   const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
   SearchUrl.addQueryParameter("q", [query]);
