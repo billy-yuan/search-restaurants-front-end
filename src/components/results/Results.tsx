@@ -66,9 +66,15 @@ function Results() {
 
   // Refresh data when query params change
   useEffect(() => {
-    setIsLoading(true);
-    refreshData();
-  }, [location.search]);
+    // We need to check that a map exists before pulling data
+    // or else the data will be fetched twice.
+    // When the map loads, the mapBounds URL params are updated, which would
+    // trigger this useEffect.
+    if (map) {
+      setIsLoading(true);
+      refreshData();
+    }
+  }, [map, location.search]);
 
   // Update searchQuery based on url param
   useEffect(() => {
