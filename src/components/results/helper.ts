@@ -1,6 +1,6 @@
 import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
+import { CurrentFilter } from "../../utility/types";
 import UrlBuilder from "../../utility/urlBuilder";
-import { CurrentFilter } from "./Results";
 
 export function buildFetchDataUrl(
   query: string,
