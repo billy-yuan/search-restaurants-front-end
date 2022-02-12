@@ -1,9 +1,12 @@
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { stateContext } from "../../utility/context/appState";
 import { makeGoogleMapsUrl } from "../../utility/makeGoogleMapsUrl";
 import { Restaurant } from "../../utility/types";
 import { selectedMarker, unselectedMarker } from "../icons";
+import { buildFetchDataUrl } from "../results/helper";
+import { useMapBoundsToString } from "../results/utility";
 import { Overlay } from "./Overlay";
 import { SearchAreaButton } from "./SearchAreaButton";
 import { ZoomType } from "./types";
@@ -24,8 +27,9 @@ export const mapContainerStyle = {
 };
 
 function ResultsMap({ data }: ResultsMapsProps) {
-  const { selected, setSelected, setShouldFetchData, map, setMap } =
+  const { currentFilter, searchQuery, selected, setSelected, map, setMap } =
     useContext(stateContext);
+  const navigate = useNavigate();
   const [showRedoSearch, setShowRedoSearch] = useState<boolean>(false);
   const [isMouseoverOverlay, setIsMouseoverOverlay] = useState<boolean>(false);
   const [isMouseoverMarker, setIsMouseoverMarker] = useState<boolean>(false);
@@ -75,7 +79,14 @@ function ResultsMap({ data }: ResultsMapsProps) {
           <div
             onClick={() => {
               setShowRedoSearch(false);
-              setShouldFetchData(true);
+              const mapBounds = useMapBoundsToString(map);
+              const url = buildFetchDataUrl(
+                searchQuery,
+                currentFilter,
+                mapBounds,
+                location.search
+              );
+              navigate(`/results?${url.encodeParameters()}`);
             }}
           >
             {showRedoSearch && <SearchAreaButton callback={() => null} />}
