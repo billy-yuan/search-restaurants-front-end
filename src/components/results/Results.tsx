@@ -54,7 +54,6 @@ function Results() {
   const refreshData = async () => {
     // Create URL
     const url = buildFetchDataUrlFromSearchParams(location.search);
-
     fetchData(url)
       .then((res) => {
         let body: Restaurant[] = [];
@@ -63,6 +62,11 @@ function Results() {
         }
         setDataState({ ...dataState, data: body });
         setIsLoading(false);
+
+        // Reset filter if no data is found
+        if (dataState.data.length === 0) {
+          setCurrentFilter(defaultFilter);
+        }
       })
       .catch((e) => {
         setIsLoading(false);
