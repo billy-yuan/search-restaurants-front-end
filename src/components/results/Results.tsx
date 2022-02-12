@@ -12,7 +12,6 @@ import "./style.css";
 import ResultsMap from "../map/ResultsMap";
 import { buildFetchDataUrl, buildFetchDataUrlFromSearchParams } from "./helper";
 import { Logo } from "../logo";
-import { useMapBoundsToString } from "./utility";
 
 function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
   return (
@@ -98,12 +97,7 @@ function Results() {
           setFilter={setCurrentFilter}
           isLoading={isLoading}
           onChange={() => {
-            const mapBounds = useMapBoundsToString(map);
-            const url = buildFetchDataUrl(
-              searchQuery,
-              currentFilter,
-              mapBounds
-            );
+            const url = buildFetchDataUrl(searchQuery, currentFilter, map);
             navigate(`/results?${url.encodeParameters()}`);
             setIsLoading(true);
             setShouldFetchData(true);

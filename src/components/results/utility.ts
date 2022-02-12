@@ -9,7 +9,7 @@ const defaultMapBounds: { ne: string; sw: string } = {
  *
  * `Example: {ne: "34.2342, -65.234", sw: "24.234, -63.221"}`
  */
-export function useMapBoundsToString(
+export function mapBoundsToString(
   map: google.maps.Map | null
 ): { ne: string; sw: string } | null {
   if (!map) {

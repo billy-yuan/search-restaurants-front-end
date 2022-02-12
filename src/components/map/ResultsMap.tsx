@@ -6,7 +6,6 @@ import { makeGoogleMapsUrl } from "../../utility/makeGoogleMapsUrl";
 import { Restaurant } from "../../utility/types";
 import { selectedMarker, unselectedMarker } from "../icons";
 import { buildFetchDataUrl } from "../results/helper";
-import { useMapBoundsToString } from "../results/utility";
 import { Overlay } from "./Overlay";
 import { SearchAreaButton } from "./SearchAreaButton";
 import { ZoomType } from "./types";
@@ -85,12 +84,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
           <div
             onClick={() => {
               setShowRedoSearch(false);
-              const mapBounds = useMapBoundsToString(map);
-              const url = buildFetchDataUrl(
-                searchQuery,
-                currentFilter,
-                mapBounds
-              );
+              const url = buildFetchDataUrl(searchQuery, currentFilter, map);
               navigate(`/results?${url.encodeParameters()}`);
             }}
           >

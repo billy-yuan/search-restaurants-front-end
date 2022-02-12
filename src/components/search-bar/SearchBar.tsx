@@ -8,7 +8,8 @@ import { SearchIcon } from "../icons";
 import "./style.css";
 import { COLOR } from "../../styles/colors";
 import { buildFetchDataUrl } from "../results/helper";
-import { useMapBoundsToString } from "../results/utility";
+import { mapBoundsToString } from "../results/utility";
+import { setMapArea } from "../map/utility";
 
 type SearchBarProps = {
   callback?: () => void;
@@ -42,17 +43,14 @@ function SearchBar({ callback }: SearchBarProps) {
     return emptyString || stringTooLong || isLoading;
   };
 
-  // Update map bounds whenever map is updated.
-  // When the user changes pages, the map is reset.
-  // This hook ensures that the previous search's map area is not used.
-  useEffect(() => {
-    mapBounds = useMapBoundsToString(null);
-  }, [map]);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mapBounds = useMapBoundsToString(null);
-    const url = buildFetchDataUrl(searchQuery, {}, mapBounds);
+
+    // TODO: The search function should not be aware of the map. Right now, I am
+    // making the search bar aware of the map by setting the "map" argument to null.
+    // https://github.com/billy-yuan/search-restaurants-front-end/issues/32
+    // The business requirement is that the search bar will reset the map area.
+    const url = buildFetchDataUrl(searchQuery, {}, null);
 
     setDataState({ ...dataState, query: searchQuery });
     navigate(`/results?${url.encodeParameters()}`);
