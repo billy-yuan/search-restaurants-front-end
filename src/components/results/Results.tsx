@@ -1,4 +1,4 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Filter from "./filter";
 import RestaurantCard from "../restaurant-card";
 import { useContext, useEffect, useState } from "react";
@@ -50,18 +50,23 @@ function Results() {
     useState<CurrentFilter>(defaultFilter);
   const mapBounds = useMapBoundsToString(map);
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (!dataState.data) {
     return <Navigate to="/" />;
   }
-
   const filterOptions = createFilters(dataState.data);
 
   const refreshData = async () => {
     // Create URL
-    const url = buildFetchDataUrl(dataState.query, currentFilter, mapBounds);
+    const url = buildFetchDataUrl(
+      dataState.query,
+      currentFilter,
+      mapBounds,
+      location.search
+    );
 
-    fetchData(url)
+    fetchData(url.buildUrl())
       .then((res) => {
         let body: Restaurant[] = [];
         if (res.status === 200) {
@@ -76,7 +81,7 @@ function Results() {
       });
   };
 
-  // Refresh data in all other cases
+  // Refresh data in all other cases (i.e. click on )
   useEffect(() => {
     if (shouldFetchData) {
       setIsLoading(true);
@@ -84,6 +89,12 @@ function Results() {
     }
     return () => setShouldFetchData(false);
   }, [shouldFetchData]);
+
+  // Refresh data when query params change
+  useEffect(() => {
+    setIsLoading(true);
+    refreshData();
+  }, [location.search]);
 
   return (
     <div className="results-container">

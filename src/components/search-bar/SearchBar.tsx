@@ -1,18 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { fetchData } from "../../utility/api";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
 import UrlBuilder from "../../utility/urlBuilder";
 import { Oval } from "react-loader-spinner";
 import { stateContext } from "../../utility/context/appState";
-import { Restaurant } from "../../utility/types";
 import { SearchIcon } from "../icons";
 import "./style.css";
 import { COLOR } from "../../styles/colors";
 import { buildFetchDataUrl } from "../results/helper";
 import { useMapBoundsToString } from "../results/utility";
-import { defaultCenter, defaultZoom, setMapArea } from "../map/utility";
-import { MAP_PROPERTIES } from "../map/types";
 
 type SearchBarProps = {
   callback?: () => void;
@@ -21,16 +17,9 @@ const loadingStyle = {
   backgroundColor: COLOR.DARK_TEAL,
 };
 
-// Requirement is to reset map to default view when user clicks search.
-function handleMapAfterSearch(map: google.maps.Map | null) {
-  setMapArea(map, {
-    [MAP_PROPERTIES.CENTER]: defaultCenter,
-    [MAP_PROPERTIES.ZOOM]: defaultZoom,
-  });
-}
-
 function SearchBar({ callback }: SearchBarProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   let mapBounds: {
     ne: string;
     sw: string;
@@ -39,10 +28,9 @@ function SearchBar({ callback }: SearchBarProps) {
 
   const {
     map,
-    setMap,
+    dataState,
     setDataState,
     isLoading,
-    setIsLoading,
     searchQuery,
     setSearchQuery,
   } = useContext(stateContext);
@@ -63,37 +51,11 @@ function SearchBar({ callback }: SearchBarProps) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsError(false);
-    setIsLoading(true);
-
-    // TODO: Only use buildFetchDataUrl
-    // https://github.com/billy-yuan/search-restaurants-front-end/issues/18
-    const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
-    SearchUrl.addQueryParameter("q", [searchQuery]);
-
     mapBounds = useMapBoundsToString(null);
-    const url = buildFetchDataUrl(searchQuery, {}, mapBounds);
-    const response = await fetchData(url).then((res) => {
-      // Requirement is that the map area ia reset if the user uses the search bar.
-      handleMapAfterSearch(map);
-      if (callback) {
-        callback();
-      }
-      return res;
-    });
-    if (
-      response.status === 200 &&
-      response.body &&
-      typeof response.body === "object"
-    ) {
-      setIsLoading(false);
-      setDataState({ query: searchQuery, data: response.body as Restaurant[] });
-      navigate(`/results?${SearchUrl.encodeParameters()}`);
-    } else {
-      setDataState({ query: searchQuery, data: [] });
-      setIsLoading(false);
-      setIsError(true);
-    }
+    const url = buildFetchDataUrl(searchQuery, {}, mapBounds, location.search);
+
+    setDataState({ ...dataState, query: searchQuery });
+    navigate(`/results?${url.encodeParameters()}`);
   };
 
   return (

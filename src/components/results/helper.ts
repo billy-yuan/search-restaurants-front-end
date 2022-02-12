@@ -8,11 +8,11 @@ export function buildFetchDataUrl(
   mapBounds: {
     ne: string;
     sw: string;
-  } | null
-): string {
+  } | null,
+  path?: string
+): UrlBuilder {
   const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
   SearchUrl.addQueryParameter("q", [query]);
-
   if (mapBounds) {
     SearchUrl.addQueryParameter("ne_bound", [mapBounds.ne]).addQueryParameter(
       "sw_bound",
@@ -26,6 +26,5 @@ export function buildFetchDataUrl(
       SearchUrl.addQueryParameter(name, filter);
     }
   }
-
-  return SearchUrl.buildUrl();
+  return SearchUrl;
 }
