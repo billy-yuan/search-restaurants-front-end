@@ -31,8 +31,6 @@ function Results() {
     setSearchQuery,
     currentFilter,
     setCurrentFilter,
-    shouldFetchData,
-    setShouldFetchData,
     dataState,
     setDataState,
     isLoading,
@@ -65,15 +63,6 @@ function Results() {
         console.log(e);
       });
   };
-
-  // Refresh data in all other cases (i.e. click on redo map search )
-  useEffect(() => {
-    if (shouldFetchData) {
-      setIsLoading(true);
-      refreshData();
-    }
-    return () => setShouldFetchData(false);
-  }, [shouldFetchData]);
 
   // Refresh data when query params change
   useEffect(() => {
@@ -112,7 +101,6 @@ function Results() {
             const url = buildFetchDataUrl(searchQuery, currentFilter, map);
             navigate(`/results?${url.encodeParameters()}`);
             setIsLoading(true);
-            setShouldFetchData(true);
           }}
         />
       </div>
