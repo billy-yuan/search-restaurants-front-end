@@ -89,8 +89,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
               const url = buildFetchDataUrl(
                 searchQuery,
                 currentFilter,
-                mapBounds,
-                location.search
+                mapBounds
               );
               navigate(`/results?${url.encodeParameters()}`);
             }}

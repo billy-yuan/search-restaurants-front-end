@@ -102,8 +102,7 @@ function Results() {
             const url = buildFetchDataUrl(
               searchQuery,
               currentFilter,
-              mapBounds,
-              location.search
+              mapBounds
             );
             navigate(`/results?${url.encodeParameters()}`);
             setIsLoading(true);

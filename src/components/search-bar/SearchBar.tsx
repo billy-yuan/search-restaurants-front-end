@@ -52,7 +52,7 @@ function SearchBar({ callback }: SearchBarProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     mapBounds = useMapBoundsToString(null);
-    const url = buildFetchDataUrl(searchQuery, {}, mapBounds, location.search);
+    const url = buildFetchDataUrl(searchQuery, {}, mapBounds);
 
     setDataState({ ...dataState, query: searchQuery });
     navigate(`/results?${url.encodeParameters()}`);
