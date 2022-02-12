@@ -65,7 +65,7 @@ function Results() {
       });
   };
 
-  // Refresh data in all other cases (i.e. click on )
+  // Refresh data in all other cases (i.e. click on redo map search )
   useEffect(() => {
     if (shouldFetchData) {
       setIsLoading(true);
