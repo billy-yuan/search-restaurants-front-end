@@ -10,8 +10,9 @@ import { Grid } from "react-loader-spinner";
 import { defaultFilter, stateContext } from "../../utility/context/appState";
 import "./style.css";
 import ResultsMap from "../map/ResultsMap";
-import { buildFetchDataUrlFromSearchParams } from "./helper";
+import { buildFetchDataUrl, buildFetchDataUrlFromSearchParams } from "./helper";
 import { Logo } from "../logo";
+import { useMapBoundsToString } from "./utility";
 
 function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
   return (
@@ -27,6 +28,7 @@ function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
 function Results() {
   const {
     map,
+    searchQuery,
     currentFilter,
     setCurrentFilter,
     shouldFetchData,
@@ -95,7 +97,18 @@ function Results() {
           currentFilter={currentFilter}
           setFilter={setCurrentFilter}
           isLoading={isLoading}
-          onChange={() => setShouldFetchData(true)}
+          onChange={() => {
+            const mapBounds = useMapBoundsToString(map);
+            const url = buildFetchDataUrl(
+              searchQuery,
+              currentFilter,
+              mapBounds,
+              location.search
+            );
+            navigate(`/results?${url.encodeParameters()}`);
+            setIsLoading(true);
+            setShouldFetchData(true);
+          }}
         />
       </div>
       <div className="results-content-container">
