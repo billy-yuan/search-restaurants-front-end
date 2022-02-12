@@ -13,10 +13,11 @@ import ResultsMap from "../map/ResultsMap";
 import { buildFetchDataUrl, buildFetchDataUrlFromSearchParams } from "./helper";
 import { Logo } from "../logo";
 
-function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
+function ResultsList({ data }: { data: Restaurant[] }) {
+  const { searchQuery } = useContext(stateContext);
   return (
     <>
-      {`Showing ${data.length} results for "${query}"`}
+      {`Showing ${data.length} results for "${searchQuery}"`}
       {data.map((value) => (
         <RestaurantCard key={value._id} restaurant={value} />
       ))}
@@ -110,11 +111,7 @@ function Results() {
       </div>
       <div className="results-content-container">
         <div className="sidebar-container">
-          {isLoading ? (
-            <Grid />
-          ) : (
-            <ResultsList data={dataState.data} query={dataState.query} />
-          )}
+          {isLoading ? <Grid /> : <ResultsList data={dataState.data} />}
         </div>
         <div className="map-container">
           <ResultsMap data={dataState.data} />
