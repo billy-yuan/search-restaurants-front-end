@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import Select from "react-select";
+import { stateContext } from "../../../utility/context/appState";
 import "./style.css";
 
 export type FilterOption = {
@@ -10,16 +11,12 @@ export type FilterOption = {
 type DropdownProps = {
   dropdownName: string;
   options: FilterOption[];
-  currentFilter: { [key: string]: string[] };
-  setFilter: React.Dispatch<React.SetStateAction<{}>>;
   isDisabled: boolean;
   onChange: () => void;
 };
 
 type FilterProps = {
   filterOptions: { [key: string]: FilterOption[] };
-  currentFilter: { [key: string]: string[] };
-  setFilter: React.Dispatch<React.SetStateAction<{}>>;
   isLoading: boolean;
   onChange: () => void;
 };
@@ -27,11 +24,10 @@ type FilterProps = {
 function Dropdown({
   dropdownName,
   options,
-  currentFilter,
-  setFilter,
   isDisabled = false,
   onChange,
 }: DropdownProps) {
+  const { currentFilter, setCurrentFilter } = useContext(stateContext);
   const selectedOptionsArray = currentFilter[dropdownName];
   const values = options.filter((value) =>
     selectedOptionsArray.includes(value.value)
@@ -43,6 +39,25 @@ function Dropdown({
     onChange();
   }, [currentFilter]);
 
+  // Get filters from URL on page load
+  useEffect(() => {
+    const parsedUrl = new URL(window.location.href);
+    let articleFilter = parsedUrl.searchParams.get("articles")?.split(",");
+    let priceFilter = parsedUrl.searchParams.get("price")?.split(",");
+    let categoryFilter = parsedUrl.searchParams.get("categories")?.split(",");
+
+    articleFilter = articleFilter ? articleFilter : [];
+    priceFilter = priceFilter ? priceFilter : [];
+    categoryFilter = categoryFilter ? categoryFilter : [];
+
+    setCurrentFilter({
+      ...currentFilter,
+      articles: articleFilter,
+      price: priceFilter,
+      categories: categoryFilter,
+    });
+  }, []);
+
   return (
     <div className="dropdown-container">
       <Select
@@ -53,7 +68,7 @@ function Dropdown({
         options={options}
         value={values}
         onChange={(e) => {
-          setFilter({
+          setCurrentFilter({
             ...currentFilter,
             [dropdownName]: e.map((option) => option.value),
           });
@@ -65,8 +80,7 @@ function Dropdown({
 
 function Filter({
   filterOptions,
-  currentFilter,
-  setFilter,
+
   isLoading,
   onChange,
 }: FilterProps) {
@@ -78,8 +92,6 @@ function Filter({
             key={`dropdown-${option}`}
             dropdownName={option}
             options={filterOptions[option]}
-            currentFilter={currentFilter}
-            setFilter={setFilter}
             isDisabled={isLoading}
             onChange={onChange}
           />
