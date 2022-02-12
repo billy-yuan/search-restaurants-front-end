@@ -1,27 +1,17 @@
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Filter from "./filter";
 import RestaurantCard from "../restaurant-card";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { fetchData } from "../../utility/api";
 import { createFilters } from "./filter/helpers";
 import { Restaurant } from "../../utility/types";
 import SearchBar from "../search-bar";
 import { Grid } from "react-loader-spinner";
-import { stateContext } from "../../utility/context/appState";
+import { defaultFilter, stateContext } from "../../utility/context/appState";
 import "./style.css";
 import ResultsMap from "../map/ResultsMap";
 import { buildFetchDataUrlFromSearchParams } from "./helper";
 import { Logo } from "../logo";
-
-export type CurrentFilter = {
-  [key: string]: string[];
-};
-
-const defaultFilter = {
-  articles: [],
-  categories: [],
-  price: [],
-};
 
 function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
   return (
@@ -37,6 +27,8 @@ function ResultsList({ data, query }: { data: Restaurant[]; query: string }) {
 function Results() {
   const {
     map,
+    currentFilter,
+    setCurrentFilter,
     shouldFetchData,
     setShouldFetchData,
     dataState,
@@ -45,8 +37,6 @@ function Results() {
     setIsLoading,
   } = useContext(stateContext);
 
-  const [currentFilter, setCurrentFilter] =
-    useState<CurrentFilter>(defaultFilter);
   const navigate = useNavigate();
   const location = useLocation();
 
