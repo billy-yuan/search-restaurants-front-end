@@ -13,8 +13,13 @@ import ResultsMap from "../map/ResultsMap";
 import { buildFetchDataUrl, buildFetchDataUrlFromSearchParams } from "./helper";
 import { Logo } from "../logo";
 
+function getSearchQuery() {
+  const parsedUrl = new URL(window.location.href);
+  let searchQuery = parsedUrl.searchParams.get("q");
+  return searchQuery ? searchQuery : "";
+}
 function ResultsList({ data }: { data: Restaurant[] }) {
-  const { searchQuery } = useContext(stateContext);
+  const searchQuery = getSearchQuery();
   return (
     <>
       {`Showing ${data.length} results for "${searchQuery}"`}
