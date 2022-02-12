@@ -10,8 +10,7 @@ import { Grid } from "react-loader-spinner";
 import { stateContext } from "../../utility/context/appState";
 import "./style.css";
 import ResultsMap from "../map/ResultsMap";
-import { useMapBoundsToString } from "./utility";
-import { buildFetchDataUrl } from "./helper";
+import { buildFetchDataUrlFromSearchParams } from "./helper";
 import { Logo } from "../logo";
 
 export type CurrentFilter = {
@@ -48,7 +47,6 @@ function Results() {
 
   const [currentFilter, setCurrentFilter] =
     useState<CurrentFilter>(defaultFilter);
-  const mapBounds = useMapBoundsToString(map);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -59,14 +57,9 @@ function Results() {
 
   const refreshData = async () => {
     // Create URL
-    const url = buildFetchDataUrl(
-      dataState.query,
-      currentFilter,
-      mapBounds,
-      location.search
-    );
+    const url = buildFetchDataUrlFromSearchParams(location.search);
 
-    fetchData(url.buildUrl())
+    fetchData(url)
       .then((res) => {
         let body: Restaurant[] = [];
         if (res.status === 200) {

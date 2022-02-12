@@ -28,3 +28,7 @@ export function buildFetchDataUrl(
   }
   return SearchUrl;
 }
+
+export function buildFetchDataUrlFromSearchParams(searchParams: string) {
+  return `${BASE_URL}${SEARCH_ENDPOINT}${searchParams}`;
+}
