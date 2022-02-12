@@ -10,7 +10,7 @@ import { useMapBoundsToString } from "../results/utility";
 import { Overlay } from "./Overlay";
 import { SearchAreaButton } from "./SearchAreaButton";
 import { ZoomType } from "./types";
-import { defaultCenter } from "./utility";
+import { defaultCenter, getMapBoundsFromCurrentUrl } from "./utility";
 import { ZoomButtons } from "./ZoomButtons";
 
 type ResultsMapsProps = {
@@ -65,7 +65,13 @@ function ResultsMap({ data }: ResultsMapsProps) {
     <>
       <LoadScript googleMapsApiKey={apiKey}>
         <GoogleMap
-          onLoad={(m) => setMap(m)}
+          onLoad={(m) => {
+            const bounds = getMapBoundsFromCurrentUrl();
+            if (bounds) {
+              m.fitBounds(bounds, 0);
+            }
+            setMap(m);
+          }}
           zoom={12}
           center={defaultCenter}
           mapContainerStyle={mapContainerStyle}
