@@ -28,10 +28,9 @@ function Results() {
   const {
     map,
     searchQuery,
+    setSearchQuery,
     currentFilter,
     setCurrentFilter,
-    shouldFetchData,
-    setShouldFetchData,
     dataState,
     setDataState,
     isLoading,
@@ -65,20 +64,28 @@ function Results() {
       });
   };
 
-  // Refresh data in all other cases (i.e. click on redo map search )
+  // Refresh data when query params change
   useEffect(() => {
-    if (shouldFetchData) {
+    // We need to check that a map exists before pulling data
+    // or else the data will be fetched twice.
+    // When the map loads, the mapBounds URL params are updated, which would
+    // trigger this useEffect.
+    if (map) {
       setIsLoading(true);
       refreshData();
     }
-    return () => setShouldFetchData(false);
-  }, [shouldFetchData]);
+  }, [map, location.search]);
 
-  // Refresh data when query params change
+  // Update searchQuery based on url param
   useEffect(() => {
-    setIsLoading(true);
-    refreshData();
-  }, [location.search]);
+    if (searchQuery === "") {
+      const parsedUrl = new URL(window.location.href);
+      const q = parsedUrl.searchParams.get("q");
+      if (q) {
+        setSearchQuery(q);
+      }
+    }
+  }, []);
 
   return (
     <div className="results-container">
@@ -93,14 +100,11 @@ function Results() {
         </div>
         <Filter
           filterOptions={filterOptions}
-          currentFilter={currentFilter}
-          setFilter={setCurrentFilter}
           isLoading={isLoading}
           onChange={() => {
             const url = buildFetchDataUrl(searchQuery, currentFilter, map);
             navigate(`/results?${url.encodeParameters()}`);
             setIsLoading(true);
-            setShouldFetchData(true);
           }}
         />
       </div>

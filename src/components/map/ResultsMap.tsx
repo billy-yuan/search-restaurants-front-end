@@ -65,6 +65,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
       <LoadScript googleMapsApiKey={apiKey}>
         <GoogleMap
           onLoad={(m) => {
+            m.setCenter(defaultCenter);
             const bounds = getMapBoundsFromCurrentUrl();
             if (bounds) {
               m.fitBounds(bounds, 0);
@@ -72,7 +73,6 @@ function ResultsMap({ data }: ResultsMapsProps) {
             setMap(m);
           }}
           zoom={12}
-          center={defaultCenter}
           mapContainerStyle={mapContainerStyle}
           onDrag={() => setShowRedoSearch(true)}
           options={googleMapsOptions}
