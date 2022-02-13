@@ -78,7 +78,6 @@ function StateContextProvider({ children }: any) {
     initialFetchDataState
   );
 
-  console.log("Loading app", fetchDataState, initialFetchDataState);
   const appState: AppState = {
     dataState,
     setDataState,
