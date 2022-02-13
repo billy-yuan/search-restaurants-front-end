@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { capitalizeString } from "../../../utility/capitalizeString";
 import { stateContext } from "../../../utility/context/appState";
+import { FETCH_DATA_ACTION_TYPE } from "../../../utility/context/reducers/fetchDataReducer";
 import { buildFetchDataUrl } from "../helper";
 import { mapBoundsToString } from "../utility";
 import "./style.css";
@@ -31,7 +32,7 @@ function Dropdown({
   const {
     map,
     searchQuery,
-    setShouldFetchData,
+    fetchDataDispatch,
     currentFilter,
     setCurrentFilter,
   } = useContext(stateContext);
@@ -45,7 +46,7 @@ function Dropdown({
   const updateUrlAndRedirect = () => {
     const mapBounds = mapBoundsToString(map);
     const url = buildFetchDataUrl(searchQuery, currentFilter, mapBounds);
-    setShouldFetchData(true);
+    fetchDataDispatch({ type: FETCH_DATA_ACTION_TYPE.FETCH_DATA });
     navigate(`/results?${url.encodeParameters()}`);
   };
 
