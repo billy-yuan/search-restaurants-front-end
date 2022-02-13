@@ -34,6 +34,7 @@ function SearchBar({ callback }: SearchBarProps) {
     isLoading,
     searchQuery,
     setSearchQuery,
+    setShouldFetchData,
   } = useContext(stateContext);
 
   const disableSearch = (query: string): boolean => {
@@ -51,7 +52,7 @@ function SearchBar({ callback }: SearchBarProps) {
     // https://github.com/billy-yuan/search-restaurants-front-end/issues/32
     // The business requirement is that the search bar will reset the map area.
     const url = buildFetchDataUrl(searchQuery, {}, null);
-
+    setShouldFetchData(true);
     setDataState({ ...dataState, query: searchQuery });
     navigate(`/results?${url.encodeParameters()}`);
   };
