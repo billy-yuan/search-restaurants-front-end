@@ -13,6 +13,7 @@ import ResultsMap from "../map/ResultsMap";
 import { buildFetchDataUrl, buildFetchDataUrlFromSearchParams } from "./helper";
 import { Logo } from "../logo";
 import { defaultMapBounds, mapBoundsToString } from "./utility";
+import { FETCH_DATA_ACTION_TYPE } from "../../utility/context/reducers/fetchDataReducer";
 
 function getFiltersFromUrl() {
   const parsedUrl = new URL(window.location.href);
@@ -69,8 +70,10 @@ function Results() {
     setDataState,
     isLoading,
     setIsLoading,
-    shouldFetchData,
-    setShouldFetchData,
+    // shouldFetchData,
+    // setShouldFetchData,
+    fetchDataState,
+    fetchDataDispatch,
     initialLoad,
     setInitialLoad,
   } = useContext(stateContext);
@@ -106,7 +109,7 @@ function Results() {
       categories: categoryFilter,
     });
 
-    setShouldFetchData(true);
+    fetchDataDispatch({ type: FETCH_DATA_ACTION_TYPE.FETCH_DATA });
   }, []);
 
   const refreshData = async () => {
@@ -139,14 +142,14 @@ function Results() {
     // or else the data will be fetched twice.
     // When the map loads, the mapBounds URL params are updated, which would
     // trigger this useEffect.
-    if (map && shouldFetchData) {
+    if (map && fetchDataState.shouldFetchData) {
       setIsLoading(true);
       refreshData();
     }
     return () => {
-      setShouldFetchData(false);
+      fetchDataDispatch({ type: FETCH_DATA_ACTION_TYPE.NO_FETCH_DATA });
     };
-  }, [shouldFetchData]);
+  }, [fetchDataState.fetchData]);
 
   // Update searchQuery based on url param
   useEffect(() => {

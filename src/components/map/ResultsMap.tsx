@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utility/api/endpoints";
 import { stateContext } from "../../utility/context/appState";
+import { FETCH_DATA_ACTION_TYPE } from "../../utility/context/reducers/fetchDataReducer";
 import { makeGoogleMapsUrl } from "../../utility/makeGoogleMapsUrl";
 import { Restaurant } from "../../utility/types";
 import { selectedMarker, unselectedMarker } from "../icons";
@@ -29,7 +30,7 @@ export const mapContainerStyle = {
 
 function ResultsMap({ data }: ResultsMapsProps) {
   const {
-    setShouldFetchData,
+    fetchDataDispatch,
     currentFilter,
     searchQuery,
     selected,
@@ -72,13 +73,6 @@ function ResultsMap({ data }: ResultsMapsProps) {
     }
   };
 
-  // Fetch data when user clicks redo search
-  useEffect(() => {
-    if (clickRedoSearch > 0) {
-      setShouldFetchData(true);
-    }
-  }, [clickRedoSearch]);
-
   return (
     <>
       <LoadScript googleMapsApiKey={apiKey}>
@@ -92,7 +86,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
               m.setCenter(defaultCenter);
             }
             setMap(m);
-            setShouldFetchData(true);
+            fetchDataDispatch({ type: FETCH_DATA_ACTION_TYPE.FETCH_DATA });
           }}
           zoom={12}
           mapContainerStyle={mapContainerStyle}
@@ -113,6 +107,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
                 mapBounds
               );
               setClickRedoSearch(clickRedoSearch + 1);
+              fetchDataDispatch({ type: FETCH_DATA_ACTION_TYPE.FETCH_DATA });
               navigate(`/results?${url.encodeParameters()}`);
             }}
           >

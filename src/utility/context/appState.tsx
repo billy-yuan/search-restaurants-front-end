@@ -5,7 +5,7 @@ import {
   initialFetchDataState,
   FetchDataState,
   FetchDataAction,
-} from "./fetchDataReducer";
+} from "./reducers/fetchDataReducer";
 
 type ResultsState = {
   query: string;
