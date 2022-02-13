@@ -21,6 +21,8 @@ export type AppState = {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   currentFilter: CurrentFilter;
   setCurrentFilter: React.Dispatch<React.SetStateAction<CurrentFilter>>;
+  initialLoad: boolean;
+  setInitialLoad: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const defaultFilter = {
@@ -45,6 +47,8 @@ function StateContext() {
     setSearchQuery: () => null,
     currentFilter: defaultFilter,
     setCurrentFilter: () => null,
+    initialLoad: true,
+    setInitialLoad: () => null,
   });
 }
 
@@ -62,6 +66,7 @@ function StateContextProvider({ children }: any) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentFilter, setCurrentFilter] =
     useState<CurrentFilter>(defaultFilter);
+  const [initialLoad, setInitialLoad] = useState<boolean>(false);
 
   const appState: AppState = {
     dataState,
@@ -78,6 +83,8 @@ function StateContextProvider({ children }: any) {
     setSearchQuery,
     currentFilter,
     setCurrentFilter,
+    initialLoad,
+    setInitialLoad,
   };
 
   return (
