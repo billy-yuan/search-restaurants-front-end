@@ -23,8 +23,8 @@ export function setMapArea(
   }
 }
 
-export function getMapBoundsFromCurrentUrl() {
-  const parsedUrl = new URL(window.location.href);
+export function getMapBoundsFromCurrentUrl(currentUrl: string) {
+  const parsedUrl = new URL(currentUrl);
   const neBound = parsedUrl.searchParams.get("ne_bound")?.split(",");
   const swBound = parsedUrl.searchParams.get("sw_bound")?.split(",");
 
