@@ -1,14 +1,20 @@
 import { BASE_URL, SEARCH_ENDPOINT } from "../../utility/api/endpoints";
 import { CurrentFilter } from "../../utility/types";
 import UrlBuilder from "../../utility/urlBuilder";
-import { mapBoundsToString } from "./utility";
+import { defaultMapBounds } from "./utility";
 
 export function buildFetchDataUrl(
   query: string,
   filters: CurrentFilter,
-  map: google.maps.Map | null
+  mapBounds?: {
+    ne: string;
+    sw: string;
+  } | null
 ): UrlBuilder {
-  const mapBounds = mapBoundsToString(map);
+  if (!mapBounds) {
+    mapBounds = defaultMapBounds;
+  }
+
   const SearchUrl = new UrlBuilder(`${BASE_URL}${SEARCH_ENDPOINT}`);
   SearchUrl.addQueryParameter("q", [query]);
   if (mapBounds) {

@@ -1,7 +1,11 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { capitalizeString } from "../../../utility/capitalizeString";
 import { stateContext } from "../../../utility/context/appState";
+import { FETCH_DATA_ACTION_TYPE } from "../../../utility/context/reducers/fetchDataReducer";
+import { buildFetchDataUrl } from "../helper";
+import { mapBoundsToString } from "../utility";
 import "./style.css";
 
 export type FilterOption = {
@@ -13,51 +17,45 @@ type DropdownProps = {
   dropdownName: string;
   options: FilterOption[];
   isDisabled: boolean;
-  onChange: () => void;
 };
 
 type FilterProps = {
   filterOptions: { [key: string]: FilterOption[] };
   isLoading: boolean;
-  onChange: () => void;
 };
 
 function Dropdown({
   dropdownName,
   options,
   isDisabled = false,
-  onChange,
 }: DropdownProps) {
-  const { currentFilter, setCurrentFilter } = useContext(stateContext);
+  const {
+    map,
+    searchQuery,
+    fetchDataDispatch,
+    currentFilter,
+    setCurrentFilter,
+  } = useContext(stateContext);
   const selectedOptionsArray = currentFilter[dropdownName];
   const values = options.filter((value) =>
     selectedOptionsArray.includes(value.value)
   );
+  const navigate = useNavigate();
+  const [filterChange, setFilterChange] = useState(0);
 
-  // if onChange() goes in the onChange callback, the state won't update.
-  // So we have to use useEffect to force this onChange() function to fire.
+  const updateUrlAndRedirect = () => {
+    const mapBounds = mapBoundsToString(map);
+    const url = buildFetchDataUrl(searchQuery, currentFilter, mapBounds);
+    fetchDataDispatch({ type: FETCH_DATA_ACTION_TYPE.FETCH_DATA });
+    navigate(`/results?${url.encodeParameters()}`);
+  };
+
+  // Update URL and redirect to it when filters change
   useEffect(() => {
-    onChange();
-  }, [currentFilter]);
-
-  // Get filters from URL on page load
-  useEffect(() => {
-    const parsedUrl = new URL(window.location.href);
-    let articleFilter = parsedUrl.searchParams.get("articles")?.split(",");
-    let priceFilter = parsedUrl.searchParams.get("price")?.split(",");
-    let categoryFilter = parsedUrl.searchParams.get("categories")?.split(",");
-
-    articleFilter = articleFilter ? articleFilter : [];
-    priceFilter = priceFilter ? priceFilter : [];
-    categoryFilter = categoryFilter ? categoryFilter : [];
-
-    setCurrentFilter({
-      ...currentFilter,
-      articles: articleFilter,
-      price: priceFilter,
-      categories: categoryFilter,
-    });
-  }, []);
+    if (filterChange > 0) {
+      updateUrlAndRedirect();
+    }
+  }, [filterChange]);
 
   return (
     <div className="dropdown-container">
@@ -75,18 +73,14 @@ function Dropdown({
             ...currentFilter,
             [dropdownName]: newValue,
           });
+          setFilterChange(filterChange + 1);
         }}
       />
     </div>
   );
 }
 
-function Filter({
-  filterOptions,
-
-  isLoading,
-  onChange,
-}: FilterProps) {
+function Filter({ filterOptions, isLoading }: FilterProps) {
   return (
     <div className="filter-container">
       <div className="dropdowns-container">
@@ -96,7 +90,6 @@ function Filter({
             dropdownName={option}
             options={filterOptions[option]}
             isDisabled={isLoading}
-            onChange={onChange}
           />
         ))}
       </div>

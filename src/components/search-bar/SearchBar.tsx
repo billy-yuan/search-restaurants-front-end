@@ -10,6 +10,7 @@ import { COLOR } from "../../styles/colors";
 import { buildFetchDataUrl } from "../results/helper";
 import { mapBoundsToString } from "../results/utility";
 import { setMapArea } from "../map/utility";
+import { FETCH_DATA_ACTION_TYPE } from "../../utility/context/reducers/fetchDataReducer";
 
 type SearchBarProps = {
   callback?: () => void;
@@ -34,6 +35,7 @@ function SearchBar({ callback }: SearchBarProps) {
     isLoading,
     searchQuery,
     setSearchQuery,
+    fetchDataDispatch,
   } = useContext(stateContext);
 
   const disableSearch = (query: string): boolean => {
@@ -51,7 +53,7 @@ function SearchBar({ callback }: SearchBarProps) {
     // https://github.com/billy-yuan/search-restaurants-front-end/issues/32
     // The business requirement is that the search bar will reset the map area.
     const url = buildFetchDataUrl(searchQuery, {}, null);
-
+    fetchDataDispatch({ type: FETCH_DATA_ACTION_TYPE.FETCH_DATA });
     setDataState({ ...dataState, query: searchQuery });
     navigate(`/results?${url.encodeParameters()}`);
   };

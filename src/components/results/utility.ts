@@ -1,4 +1,4 @@
-const defaultMapBounds: { ne: string; sw: string } = {
+export const defaultMapBounds: { ne: string; sw: string } = {
   ne: "40.77842,-73.94285",
   sw: "40.578978,-74.04928",
 };

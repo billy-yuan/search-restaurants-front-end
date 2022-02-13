@@ -1,5 +1,11 @@
-import { createContext, useState } from "react";
+import { createContext, useReducer, useState } from "react";
 import { CurrentFilter, Restaurant } from "../types";
+import {
+  fetchDataReducer,
+  initialFetchDataState,
+  FetchDataState,
+  FetchDataAction,
+} from "./reducers/fetchDataReducer";
 
 type ResultsState = {
   query: string;
@@ -13,14 +19,16 @@ export type AppState = {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   map: google.maps.Map | null;
   setMap: React.Dispatch<React.SetStateAction<google.maps.Map | null>>;
-  shouldFetchData: boolean;
-  setShouldFetchData: React.Dispatch<React.SetStateAction<boolean>>;
   selected: Restaurant | null;
   setSelected: React.Dispatch<React.SetStateAction<Restaurant | null>>;
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   currentFilter: CurrentFilter;
   setCurrentFilter: React.Dispatch<React.SetStateAction<CurrentFilter>>;
+  initialLoad: boolean;
+  setInitialLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchDataState: FetchDataState;
+  fetchDataDispatch: React.Dispatch<FetchDataAction>;
 };
 
 const defaultFilter = {
@@ -37,14 +45,16 @@ function StateContext() {
     setIsLoading: () => null,
     map: null,
     setMap: () => null,
-    shouldFetchData: false,
-    setShouldFetchData: () => null,
     selected: null,
     setSelected: () => null,
     searchQuery: "",
     setSearchQuery: () => null,
     currentFilter: defaultFilter,
     setCurrentFilter: () => null,
+    initialLoad: true,
+    setInitialLoad: () => null,
+    fetchDataState: initialFetchDataState,
+    fetchDataDispatch: () => null,
   });
 }
 
@@ -57,11 +67,16 @@ function StateContextProvider({ children }: any) {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [shouldFetchData, setShouldFetchData] = useState<boolean>(false);
   const [selected, setSelected] = useState<Restaurant | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentFilter, setCurrentFilter] =
     useState<CurrentFilter>(defaultFilter);
+  const [initialLoad, setInitialLoad] = useState<boolean>(false);
+
+  const [fetchDataState, fetchDataDispatch] = useReducer(
+    fetchDataReducer,
+    initialFetchDataState
+  );
 
   const appState: AppState = {
     dataState,
@@ -70,14 +85,16 @@ function StateContextProvider({ children }: any) {
     setIsLoading,
     map,
     setMap,
-    shouldFetchData,
-    setShouldFetchData,
     selected,
     setSelected,
     searchQuery,
     setSearchQuery,
     currentFilter,
     setCurrentFilter,
+    initialLoad,
+    setInitialLoad,
+    fetchDataState,
+    fetchDataDispatch,
   };
 
   return (
