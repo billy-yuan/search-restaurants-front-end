@@ -1,5 +1,5 @@
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utility/api/endpoints";
 import { stateContext } from "../../utility/context/appState";
@@ -42,6 +42,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
   const [showRedoSearch, setShowRedoSearch] = useState<boolean>(false);
   const [isMouseoverOverlay, setIsMouseoverOverlay] = useState<boolean>(false);
   const [isMouseoverMarker, setIsMouseoverMarker] = useState<boolean>(false);
+  const [clickRedoSearch, setClickRedoSearch] = useState<number>(0);
 
   const handleMarkerMouseOut = () => {
     setTimeout(() => {
@@ -70,6 +71,14 @@ function ResultsMap({ data }: ResultsMapsProps) {
         return;
     }
   };
+
+  // Fetch data when user clicks redo search
+  useEffect(() => {
+    if (clickRedoSearch > 0) {
+      setShouldFetchData(true);
+    }
+  }, [clickRedoSearch]);
+
   return (
     <>
       <LoadScript googleMapsApiKey={apiKey}>
@@ -103,7 +112,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
                 currentFilter,
                 mapBounds
               );
-              setShouldFetchData(true);
+              setClickRedoSearch(clickRedoSearch + 1);
               navigate(`/results?${url.encodeParameters()}`);
             }}
           >

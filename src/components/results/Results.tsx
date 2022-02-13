@@ -1,7 +1,7 @@
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Filter from "./filter";
 import RestaurantCard from "../restaurant-card";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { fetchData } from "../../utility/api";
 import { createFilters } from "./filter/helpers";
 import { Restaurant } from "../../utility/types";
@@ -12,6 +12,34 @@ import "./style.css";
 import ResultsMap from "../map/ResultsMap";
 import { buildFetchDataUrl, buildFetchDataUrlFromSearchParams } from "./helper";
 import { Logo } from "../logo";
+import { defaultMapBounds, mapBoundsToString } from "./utility";
+
+function getFiltersFromUrl() {
+  const parsedUrl = new URL(window.location.href);
+  let articleFilter = parsedUrl.searchParams.get("articles")?.split(",");
+  let priceFilter = parsedUrl.searchParams.get("price")?.split(",");
+  let categoryFilter = parsedUrl.searchParams.get("categories")?.split(",");
+
+  articleFilter = articleFilter ? articleFilter : [];
+  priceFilter = priceFilter ? priceFilter : [];
+  categoryFilter = categoryFilter ? categoryFilter : [];
+
+  return {
+    articleFilter,
+    priceFilter,
+    categoryFilter,
+  };
+}
+function geoParamsExist(): boolean {
+  const parsedUrl = new URL(window.location.href);
+  const neBound = parsedUrl.searchParams.get("ne_bound");
+  const swBound = parsedUrl.searchParams.get("sw_bound");
+
+  if (neBound && swBound) {
+    return true;
+  }
+  return false;
+}
 
 function getSearchQuery() {
   const parsedUrl = new URL(window.location.href);
@@ -41,6 +69,10 @@ function Results() {
     setDataState,
     isLoading,
     setIsLoading,
+    shouldFetchData,
+    setShouldFetchData,
+    initialLoad,
+    setInitialLoad,
   } = useContext(stateContext);
 
   const navigate = useNavigate();
@@ -50,6 +82,32 @@ function Results() {
     return <Navigate to="/" />;
   }
   const filterOptions = createFilters(dataState.data);
+
+  const addGeoToUrlAndRedirect = () => {
+    const currentParams = location.search;
+    const neBoundParam = encodeURIComponent(`${defaultMapBounds.ne}`);
+    const seBoundParam = encodeURIComponent(`${defaultMapBounds.sw}`);
+
+    const params = `${currentParams}&ne_bound=${neBoundParam}&se_bound=${seBoundParam}`;
+    navigate(`/results${params}`);
+  };
+
+  // add map bounds if they don't exist in URL
+  useEffect(() => {
+    if (!geoParamsExist()) {
+      addGeoToUrlAndRedirect();
+    }
+    // get filters from URL
+    const { articleFilter, priceFilter, categoryFilter } = getFiltersFromUrl();
+    setCurrentFilter({
+      ...currentFilter,
+      articles: articleFilter,
+      price: priceFilter,
+      categories: categoryFilter,
+    });
+
+    setShouldFetchData(true);
+  }, []);
 
   const refreshData = async () => {
     // Create URL
@@ -62,13 +120,14 @@ function Results() {
         }
         setDataState({ ...dataState, data: body });
         setIsLoading(false);
-
+        setInitialLoad(false);
         // Reset filter if no data is found
         if (dataState.data.length === 0) {
           setCurrentFilter(defaultFilter);
         }
       })
       .catch((e) => {
+        setInitialLoad(false);
         setIsLoading(false);
         console.log(e);
       });
@@ -80,11 +139,14 @@ function Results() {
     // or else the data will be fetched twice.
     // When the map loads, the mapBounds URL params are updated, which would
     // trigger this useEffect.
-    if (map) {
+    if (map && shouldFetchData) {
       setIsLoading(true);
       refreshData();
     }
-  }, [map, location.search]);
+    return () => {
+      setShouldFetchData(false);
+    };
+  }, [shouldFetchData]);
 
   // Update searchQuery based on url param
   useEffect(() => {
@@ -108,15 +170,7 @@ function Results() {
             <SearchBar callback={() => setCurrentFilter(defaultFilter)} />
           </div>
         </div>
-        <Filter
-          filterOptions={filterOptions}
-          isLoading={isLoading}
-          onChange={() => {
-            const url = buildFetchDataUrl(searchQuery, currentFilter, map);
-            navigate(`/results?${url.encodeParameters()}`);
-            setIsLoading(true);
-          }}
-        />
+        <Filter filterOptions={filterOptions} isLoading={isLoading} />
       </div>
       <div className="results-content-container">
         <div className="sidebar-container">
