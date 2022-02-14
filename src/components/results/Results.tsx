@@ -100,16 +100,19 @@ function Results() {
     if (!geoParamsExist()) {
       addGeoToUrlAndRedirect();
     }
-    // get filters from URL
+    fetchDataDispatch({ type: FETCH_DATA_ACTION_TYPE.FETCH_DATA });
+  }, []);
+
+  // apply filters from URL params
+  useEffect(() => {
     const { articleFilter, priceFilter, categoryFilter } = getFiltersFromUrl();
+
     setCurrentFilter({
       ...currentFilter,
       articles: articleFilter,
       price: priceFilter,
       categories: categoryFilter,
     });
-
-    fetchDataDispatch({ type: FETCH_DATA_ACTION_TYPE.FETCH_DATA });
   }, []);
 
   const refreshData = async () => {
@@ -123,11 +126,11 @@ function Results() {
         }
         setDataState({ ...dataState, data: body });
         setIsLoading(false);
-        setInitialLoad(false);
         // Reset filter if no data is found
-        if (dataState.data.length === 0) {
+        if (body.length === 0) {
           setCurrentFilter(defaultFilter);
         }
+        setInitialLoad(false);
       })
       .catch((e) => {
         setInitialLoad(false);
