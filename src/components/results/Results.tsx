@@ -120,7 +120,7 @@ function Results() {
         setDataState({ ...dataState, data: body });
         setIsLoading(false);
         // Reset filter if no data is found
-        if (dataState.data.length === 0) {
+        if (body.length === 0) {
           setCurrentFilter(defaultFilter);
         }
       })
