@@ -70,12 +70,8 @@ function Results() {
     setDataState,
     isLoading,
     setIsLoading,
-    // shouldFetchData,
-    // setShouldFetchData,
     fetchDataState,
     fetchDataDispatch,
-    initialLoad,
-    setInitialLoad,
   } = useContext(stateContext);
 
   const navigate = useNavigate();
@@ -123,14 +119,12 @@ function Results() {
         }
         setDataState({ ...dataState, data: body });
         setIsLoading(false);
-        setInitialLoad(false);
         // Reset filter if no data is found
         if (dataState.data.length === 0) {
           setCurrentFilter(defaultFilter);
         }
       })
       .catch((e) => {
-        setInitialLoad(false);
         setIsLoading(false);
         console.log(e);
       });
