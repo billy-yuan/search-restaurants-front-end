@@ -25,8 +25,6 @@ export type AppState = {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   currentFilter: CurrentFilter;
   setCurrentFilter: React.Dispatch<React.SetStateAction<CurrentFilter>>;
-  initialLoad: boolean;
-  setInitialLoad: React.Dispatch<React.SetStateAction<boolean>>;
   fetchDataState: FetchDataState;
   fetchDataDispatch: React.Dispatch<FetchDataAction>;
 };
@@ -51,8 +49,6 @@ function StateContext() {
     setSearchQuery: () => null,
     currentFilter: defaultFilter,
     setCurrentFilter: () => null,
-    initialLoad: true,
-    setInitialLoad: () => null,
     fetchDataState: initialFetchDataState,
     fetchDataDispatch: () => null,
   });
@@ -71,7 +67,6 @@ function StateContextProvider({ children }: any) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentFilter, setCurrentFilter] =
     useState<CurrentFilter>(defaultFilter);
-  const [initialLoad, setInitialLoad] = useState<boolean>(false);
 
   const [fetchDataState, fetchDataDispatch] = useReducer(
     fetchDataReducer,
@@ -91,8 +86,6 @@ function StateContextProvider({ children }: any) {
     setSearchQuery,
     currentFilter,
     setCurrentFilter,
-    initialLoad,
-    setInitialLoad,
     fetchDataState,
     fetchDataDispatch,
   };

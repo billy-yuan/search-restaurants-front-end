@@ -70,12 +70,8 @@ function Results() {
     setDataState,
     isLoading,
     setIsLoading,
-    // shouldFetchData,
-    // setShouldFetchData,
     fetchDataState,
     fetchDataDispatch,
-    initialLoad,
-    setInitialLoad,
   } = useContext(stateContext);
 
   const navigate = useNavigate();
@@ -130,10 +126,8 @@ function Results() {
         if (body.length === 0) {
           setCurrentFilter(defaultFilter);
         }
-        setInitialLoad(false);
       })
       .catch((e) => {
-        setInitialLoad(false);
         setIsLoading(false);
         console.log(e);
       });
