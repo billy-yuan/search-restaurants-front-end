@@ -21,3 +21,18 @@
   font-weight: bold;
   text-transform: capitalize;
 }
+
+@media screen and (max-width: 768px) {
+  .filter-container {
+    overflow-x: scroll;
+    width: 100vw;
+  }
+
+  .dropdowns-container {
+    justify-content: left;
+  }
+  .dropdown-container {
+    min-width: 100px;
+    margin: 0 10px 0 10px;
+  }
+}
