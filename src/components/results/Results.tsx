@@ -171,7 +171,13 @@ function Results() {
       </div>
       <div className="results-content-container">
         <div className="sidebar-container">
-          {isLoading ? <Grid /> : <ResultsList data={dataState.data} />}
+          {isLoading ? (
+            <div className="results-loading-container">
+              <Grid />
+            </div>
+          ) : (
+            <ResultsList data={dataState.data} />
+          )}
         </div>
         <div className="map-container">
           <ResultsMap data={dataState.data} />
