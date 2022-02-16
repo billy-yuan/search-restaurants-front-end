@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utility/api/endpoints";
 import { stateContext } from "../../utility/context/appState";
 import { FETCH_DATA_ACTION_TYPE } from "../../utility/context/reducers/fetchDataReducer";
+import { useIsMobile } from "../../utility/hooks";
 import { makeGoogleMapsUrl } from "../../utility/makeGoogleMapsUrl";
 import { Restaurant } from "../../utility/types";
 import { selectedMarker, unselectedMarker } from "../icons";
@@ -45,6 +46,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
   const [isMouseoverMarker, setIsMouseoverMarker] = useState<boolean>(false);
   const [clickRedoSearch, setClickRedoSearch] = useState<number>(0);
 
+  const isMobile = useIsMobile();
   const handleMarkerMouseOut = () => {
     setTimeout(() => {
       setIsMouseoverMarker(false);
@@ -52,6 +54,17 @@ function ResultsMap({ data }: ResultsMapsProps) {
         setSelected(null);
       }
     }, 30);
+  };
+
+  const handleMarkerClick = (entry: Restaurant) => {
+    if (!isMobile) {
+      window.open(
+        makeGoogleMapsUrl(`${entry.name} ${entry.address}`),
+        "_blank"
+      );
+    } else {
+      setSelected(selected ? null : entry);
+    }
   };
 
   const handleZoomClick = (zoomType: ZoomType) => {
@@ -77,6 +90,11 @@ function ResultsMap({ data }: ResultsMapsProps) {
     <>
       <LoadScript googleMapsApiKey={apiKey}>
         <GoogleMap
+          onClick={() => {
+            if (isMobile && selected) {
+              setSelected(null);
+            }
+          }}
           onLoad={(m) => {
             const currentUrl = `${BASE_URL}${location.pathname}${location.search}`;
             const bounds = getMapBoundsFromCurrentUrl(currentUrl);
@@ -125,12 +143,7 @@ function ResultsMap({ data }: ResultsMapsProps) {
                     isMouseoverMarker={isMouseoverMarker}
                   />
                   <Marker
-                    onClick={() => {
-                      window.open(
-                        makeGoogleMapsUrl(`${entry.name} ${entry.address}`),
-                        "_blank"
-                      );
-                    }}
+                    onClick={() => handleMarkerClick(entry)}
                     onMouseOver={() => {
                       setIsMouseoverMarker(true);
                       setSelected(entry);

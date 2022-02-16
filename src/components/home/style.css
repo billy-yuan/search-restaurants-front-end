@@ -1,3 +1,5 @@
+@import "../../styles/vars.css";
+
 .home-search-container {
   width: 100vw;
   height: 100vh;
@@ -9,4 +11,12 @@
 
 .home-search-about-header {
   margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+  .home-search-container {
+    height: auto;
+    width: 90vw;
+    margin: 20px;
+  }
 }
