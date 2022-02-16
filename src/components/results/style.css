@@ -35,6 +35,11 @@
   right: 0;
 }
 
+.results-loading-container {
+  display: flex;
+  justify-content: center;
+}
+
 @media only screen and (max-width: 768px) {
   .results-header {
     position: fixed;
