@@ -1,12 +1,18 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useIsMobile } from "../../utility/hooks";
 import "./style.css";
 
 type LogoProps = {
   onClick?: () => void;
   cursorToPointer?: boolean;
 };
+
 export function Logo({ onClick, cursorToPointer = true }: LogoProps) {
   const [style, setStyle] = useState<React.CSSProperties>({});
+  const isMobile = useIsMobile();
+  const location = useLocation();
+  const isResultsPage = location.pathname === "/results";
 
   return (
     <div
@@ -16,7 +22,7 @@ export function Logo({ onClick, cursorToPointer = true }: LogoProps) {
       className="logo"
       onClick={() => onClick && onClick()}
     >
-      Search Eater
+      {isMobile && isResultsPage ? "S" : "Search Eater"}
     </div>
   );
 }

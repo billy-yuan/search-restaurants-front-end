@@ -41,8 +41,14 @@
     top: 0px;
     left: 0px;
   }
+
+  .results-header-top-row {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100vw;
+  }
   .results-header-logo {
-    display: none;
+    position: inherit;
   }
 
   .sidebar-container {
