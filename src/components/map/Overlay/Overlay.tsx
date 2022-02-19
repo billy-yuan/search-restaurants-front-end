@@ -1,6 +1,7 @@
 import { OverlayView } from "@react-google-maps/api";
 import { useContext } from "react";
 import { stateContext } from "../../../utility/context/appState";
+import { useIsMobile } from "../../../utility/hooks";
 import { makeGoogleMapsUrl } from "../../../utility/makeGoogleMapsUrl";
 import { Restaurant } from "../../../utility/types";
 import { LinkButton } from "../../icons";
@@ -19,11 +20,13 @@ export function Overlay({
   isMouseoverMarker,
 }: OverlayProps) {
   const { selected, setSelected } = useContext(stateContext);
+  const isMobile = useIsMobile();
+
   if (selected?._id !== restaurant._id) {
     return <></>;
   }
 
-  if (!isMouseoverOverlay && !isMouseoverMarker) {
+  if (!isMobile && !isMouseoverOverlay && !isMouseoverMarker) {
     return <></>;
   }
 
