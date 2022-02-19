@@ -1,0 +1,11 @@
+@import "../../styles/vars.css";
+
+.footer-container {
+  color: var(--color-grey-dark-1);
+  margin-bottom: 4vh;
+}
+
+.footer-container:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
