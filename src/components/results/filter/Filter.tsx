@@ -62,6 +62,10 @@ function Dropdown({
       <Select
         name={dropdownName}
         isMulti={false}
+        // menuPortalTarget and styles prevent the dropdown options from being hidden by the map
+        // https://stackoverflow.com/questions/55830799/how-to-change-zindex-in-react-select-drowpdown
+        menuPortalTarget={document.body}
+        styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
         isDisabled={isDisabled}
         placeholder={capitalizeString(dropdownName)}
         options={options}
