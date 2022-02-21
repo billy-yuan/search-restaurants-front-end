@@ -3,6 +3,8 @@
 .footer-container {
   color: var(--color-grey-dark-1);
   margin-bottom: 4vh;
+  text-align: left;
+  padding-left: 55px;
 }
 
 .footer-container:hover {
